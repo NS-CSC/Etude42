@@ -1,0 +1,20 @@
+name: Code Quality Check
+
+on:
+  pull_request:
+    branches:
+      - main  # 必要に応じて変更
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install cppcheck
+        run: sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        run: find . -name "*.c" -o -name "*.h" | xargs  cppcheck  --error-exitcode=1 --suppress=missingIncludeSystem
