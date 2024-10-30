@@ -3,7 +3,7 @@ name: Code Format Check
 on: [pull_request]
 
 jobs:
-  lint:
+  format:
     runs-on: ubuntu-latest
 
     steps:
