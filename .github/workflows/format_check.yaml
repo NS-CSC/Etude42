@@ -1,0 +1,22 @@
+name: Code Format Check
+
+on:
+  pull_request:
+    branches:
+      - main  # 必要に応じて変更
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up clang-format
+        run: sudo apt-get install -y clang-format
+
+      - name: Check code format with clang-format
+        run: |
+          find . -name "*.c" -o -name "*.h" | xargs clang-format -style=file -i
+          git diff --exit-code
