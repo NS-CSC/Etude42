@@ -1,9 +1,6 @@
 name: Code Quality Check
 
-on:
-  pull_request:
-    branches:
-      - main  # 必要に応じて変更
+on: [pull_request]
 
 jobs:
   lint:

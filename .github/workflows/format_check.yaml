@@ -1,12 +1,9 @@
 name: Code Format Check
 
-on:
-  pull_request:
-    branches:
-      - main  # 必要に応じて変更
+on: [pull_request]
 
 jobs:
-  lint:
+  format:
     runs-on: ubuntu-latest
 
     steps:
