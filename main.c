@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <unistd.h>
 
-int main(void)
+int main(char *argv[])
 {
-    printf("Hello, World!\n");
+    const int rc = access(argv[1], 0);
+    printf("rc: %d\n", rc);
     return 0;
 }
