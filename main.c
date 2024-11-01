@@ -4,7 +4,7 @@
 // #include "display.h"
 // #include "input_handler.h"
 // #include "config.h"
-//  これらは他の進捗に応じて変更する。
+//  これらは他の進捗に応じて変更する
 
 void start_editor(void);
 
