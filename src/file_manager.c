@@ -9,8 +9,7 @@ void create_file(const char* filename)
     {
         fclose(file);
         return;
-    }
-    else
+    } else
     {
         status = 1;
     }
