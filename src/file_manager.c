@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <unistd.h>
-#include <string.h>
 #include <errno.h>
-
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 //書き込み権限があるか
 int check_read_permission(const char* filename) 
