@@ -39,12 +39,12 @@ int check_write_permission(const char* filename)
         if (errno == EACCES)
         {
             fprintf(stderr, "ERROR:'%s'への書き込み権限がありません\n",
-                     filename);
+                    filename);
 
             return -1;
         } else if (errno == ENOENT)
         {
-            fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n",filename);
+            fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
 
             return -2;
         } else
