@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
             printf("path_nameのテスト: %s\n", path_name);
             // path_nameのテスト
         }
-        
+
         commandline_arg_index++;
     }
 
