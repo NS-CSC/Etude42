@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
 
     int path_arg_count;
 
-    
     commandline_arg_index = 1;
 
     path_arg_count = 0;
@@ -68,7 +67,7 @@ int main(int argc, char *argv[])
             // path_nameのテスト
         }
 
-        commandline_arg_index++;    
+        commandline_arg_index++;
     }
 
     // start_editor(0);
