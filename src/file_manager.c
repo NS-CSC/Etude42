@@ -15,7 +15,7 @@ int check_read_permission(const char* filename) {
             printf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
             return -2;
         } else {
-            printf(stderr, "エラー: %s\n", strerror(errno));
+            printf(stderr, "ERROR: %s\n", strerror(errno));
             return -3;
         }
     }
@@ -33,7 +33,7 @@ int check_write_permission(const char* filename) {
             printf(stderr, "ERROR: ファイル'%s'が存在しません\n", filename);
             return -2;
         } else {
-            printf(stderr, "エラー: %s\n", strerror(errno));
+            printf(stderr, "ERROR: %s\n", strerror(errno));
             return -3;
         }
     }
