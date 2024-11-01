@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -13,13 +12,11 @@ int check_read_permission(const char* filename)
         {
             fprintf(stderr, "ERROR: '%s' への読み込み権限がありません\n", filename);
             return -1;
-        }
-        else if (errno == ENOENT)
+        } else if (errno == ENOENT)
         {
             fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
             return -2;
-        }
-        else
+        } else
         {
             fprintf(stderr, "ERROR: %s\n", strerror(errno));
             return -3;
@@ -38,13 +35,11 @@ int check_write_permission(const char* filename)
         {
             fprintf(stderr, "ERROR:'%s'への書き込み権限がありません\n", filename);
             return -1;
-        }
-        else if (errno == ENOENT)
+        } else if (errno == ENOENT)
         {
             fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
             return -2;
-        }
-        else
+        } else
         {
             fprintf(stderr, "ERROR: %s\n", strerror(errno));
             return -3;
