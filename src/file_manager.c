@@ -80,3 +80,35 @@ FILE* get_file_pointer(const char* file_path)
     printf("Error: %s", strerror(errno));
     return NULL;
 }
+
+int save_file(const char* file_path, const char* data)
+{
+    FILE* fp = get_file_pointer(file_path);
+
+    if (fp == NULL)
+    {
+        fprintf(stderr, "Failed to open or create file: %s\n", file_path);
+        return -1;
+    }
+
+    const int write_result = fprintf(fp, "%s", data);
+
+    // 書き込みが成功したか確認
+    if (write_result < 0)
+    {
+        fprintf(stderr, "Error writing to file %s: %s\n", file_path, strerror(errno));
+        fclose(fp);
+        return -1;
+    }
+
+    const int close_result = fclose(fp);
+
+    // クローズが成功したか確認
+    if (close_result != 0)
+    {
+        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}
