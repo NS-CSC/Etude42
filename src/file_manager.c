@@ -25,6 +25,7 @@ int check_read_permission(const char* filename)
         } else
         {
             fprintf(stderr, "ERROR: %s\n", strerror(errno));
+
             return -3;
         }
     }
