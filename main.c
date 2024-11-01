@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
     int path_arg_count;
 
-
+    
     commandline_arg_index = 1;
 
     path_arg_count = 0;
@@ -36,19 +36,19 @@ int main(int argc, char *argv[])
         {
             // コマンドラインオプションかどうかの区別する条件式
 
-            //if (argv[commandline_arg_index][1] == 'h') {}
-            // コマンドラインオプション判別の例
+            // if (argv[commandline_arg_index][1] == 'h') {}
+            //  コマンドラインオプション判別の例
 
             printf("オプション: %s\n", argv[commandline_arg_index]);
             // 入力されたオプションの確認(テスト)
         }
-        
+
         else
         {
             // 引数にパスがあったらという条件式
 
-            path_arg_count ++;
-            
+            path_arg_count++;
+
             if (path_arg_count > 1)
             {
                 // パスの複数入力があった時の条件式
@@ -61,19 +61,19 @@ int main(int argc, char *argv[])
             path_name = argv[1];
             // path_nameにpathを代入
 
-            //example_function(path_name);
-            // file_managerへファイルの読み込みを指示
+            // example_function(path_name);
+            //  file_managerへファイルの読み込みを指示
 
             printf("path_nameのテスト: %s\n", path_name);
             // path_nameのテスト
         }
 
-        commandline_arg_index ++;    
+        commandline_arg_index++;    
     }
 
-    //start_editor(0);
-    // エディターの動作を開始する
-    // int型でエディタの状態を指定する（通常は0でhelpは1など...）
+    // start_editor(0);
+    //  エディターの動作を開始する
+    //  int型でエディタの状態を指定する（通常は0でhelpは1など...）
 
     return 0;
 }
