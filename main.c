@@ -10,24 +10,70 @@ void start_editor(void);
 
 int main(int argc, char *argv[])
 {
-    printf("コマンドライン引数(テスト): %s\n", argv[1]);
-    // コマンドライン引数のテスト
+    int commandline_arg_index;
 
-    /*if (argv[1][0] == '-')
+    char *path_name;
+
+    int path_arg_count;
+
+
+    commandline_arg_index = 1;
+
+    path_arg_count = 0;
+
+    if (argc == 1)
     {
-    if (argv[1][1] == 'h') {}
-    }*/
-    // コマンドラインオプションの雛形
+        // コマンドライン引数が入力されていない時の条件式
 
-    char *path_name = argv[1];
-    // example_function(path_name);
-    //  file_managerへファイルの読み込みを指示
+        puts("コマンドライン引数が入力されていません。");
 
-    printf("path_nameのテスト: %s\n", path_name);
-    // path_nameのテスト
+        return 0;
+    }
 
-    start_editor();
-    // エディターの動作を開始する。
+    while (commandline_arg_index < argc)
+    {
+        if (argv[commandline_arg_index][0] == '-')
+        {
+            // コマンドラインオプションかどうかの区別する条件式
+
+            //if (argv[commandline_arg_index][1] == 'h') {}
+            // コマンドラインオプション判別の例
+
+            printf("オプション: %s\n", argv[commandline_arg_index]);
+            // 入力されたオプションの確認(テスト)
+        }
+        
+        else
+        {
+            // 引数にパスがあったらという条件式
+
+            path_arg_count ++;
+            
+            if (path_arg_count > 1)
+            {
+                // パスの複数入力があった時の条件式
+
+                puts("パスが複数入力されています。");
+
+                return 0;
+            }
+
+            path_name = argv[1];
+            // path_nameにpathを代入
+
+            //example_function(path_name);
+            // file_managerへファイルの読み込みを指示
+
+            printf("path_nameのテスト: %s\n", path_name);
+            // path_nameのテスト
+        }
+
+        commandline_arg_index ++;    
+    }
+
+    //start_editor(0);
+    // エディターの動作を開始する
+    // int型でエディタの状態を指定する（通常は0でhelpは1など...）
 
     return 0;
 }
