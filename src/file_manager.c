@@ -96,8 +96,19 @@ int save_file(const char* file_path, const char* data)
     // 書き込みが成功したか確認
     if (write_result < 0)
     {
-        fprintf(stderr, "Error writing to file %s: %s\n", file_path, strerror(errno));
-        fclose(fp);
+        fprintf(stderr, "Error writing to file %s: %s\n", file_path,
+                strerror(errno));
+
+        const int close_result = fclose(fp);
+
+        // クローズが成功したか確認
+        if (close_result != 0)
+        {
+            fprintf(stderr, "Error closing file %s: %s\n", file_path,
+                    strerror(errno));
+            return -1;
+        }
+
         return -1;
     }
 
@@ -106,7 +117,8 @@ int save_file(const char* file_path, const char* data)
     // クローズが成功したか確認
     if (close_result != 0)
     {
-        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
+        fprintf(stderr, "Error closing file %s: %s\n", file_path,
+                strerror(errno));
         return -1;
     }
 
