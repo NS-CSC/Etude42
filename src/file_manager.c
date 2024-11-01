@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 
-  
 void create_file(const char* filename)
 {
     FILE* file;
