@@ -3,9 +3,14 @@ void create_file(const char* filename)
 {
     FILE* file;
     int status;  // 読み込みできたかのフラグ
-
+    status = 0;
     file = fopen(filename, "r+");
-    if (file == NULL)
+    if (file != NULL)
+    {
+        fclose(file);
+        return;
+    }
+    else
     {
         status = 1;
     }
@@ -19,4 +24,5 @@ void create_file(const char* filename)
         }
     }
     fclose(file);
+    return;
 }
