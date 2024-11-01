@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 
             // example_function(path_name);
             //  file_managerへファイルの読み込みを指示
+            //  file_managerから他のファイルの関数を呼び出してエディタが起動する
 
             printf("path_nameのテスト: %s\n", path_name);
             // path_nameのテスト
@@ -69,20 +70,6 @@ int main(int argc, char *argv[])
 
         commandline_arg_index++;
     }
-
-    // start_editor(0);
-    //  エディターの動作を開始する
-    //  int型でエディタの状態を指定する（通常は0でhelpは1など...）
-
+    
     return 0;
-}
-
-void start_editor(void)
-{
-    // ユーザーからの入力を受け取り、カーソル操作やテキスト編集などの>
-    // 機能をハンドリングする。また、プログラムの状態を管理し、必要に応じて画面を更新する役割を担う。
-
-    printf("エディター動作テスト\n");
-
-    return;
 }
