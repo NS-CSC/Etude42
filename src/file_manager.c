@@ -57,10 +57,7 @@ int check_write_permission(const char* filename)
     // 書き込み権限あり
     return 0;
 }
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 // ファイルのポインタを返す関数
 FILE* get_file_pointer(const char* file_path)
 {
