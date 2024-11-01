@@ -2,10 +2,21 @@
 void create_file(const char* filename)
 {
     FILE *file;
-    file = fopen(filename, "a+");
-    
+    int status; //読み込みできたかのフラグ
+
+    file = fopen(filename, "r+");
     if(file == NULL)
     {
-        printf("Failed to create file\n");
+        status = 1;
     }
+    
+    if(status == 1)
+    {
+        file = fopen(filename, "w");
+        if(file == NULL)
+        {
+            printf("Failed to create file\n");
+        }
+    }
+
 }
