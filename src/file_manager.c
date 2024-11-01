@@ -18,4 +18,5 @@ void create_file(const char* filename)
             printf("Failed to create file\n");
         }
     }
+    fclose(file);
 }
