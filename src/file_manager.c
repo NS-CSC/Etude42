@@ -43,7 +43,6 @@ int check_read_permission(const char* filename)
     return 0;
 }
 
-
 // 書き込み権限があるか
 int check_write_permission(const char* filename)
 {
