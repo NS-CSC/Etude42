@@ -12,7 +12,7 @@ void render_screen(char *file_data[]);
 // {
 //     // テストで使用するmain関数
 //
-//     char *file_data[10001];
+//     char *file_data[10];
 //
 //     file_data[0] = "#include <stdio.h>";
 //     file_data[1] = "";
@@ -21,6 +21,7 @@ void render_screen(char *file_data[]);
 //     file_data[4] = "    puts(\"Hello\");";
 //     file_data[5] = "    return 0;";
 //     file_data[6] = "}";
+//     file_data[7] = NULL;
 //
 //     render_screen(file_data);
 //
@@ -33,6 +34,8 @@ void render_screen(char *file_data[])
     // もう一つファイルの桁数の情報が欲しい
 
     int number;
+
+    int indent_space;
 
     number = 0;
 
