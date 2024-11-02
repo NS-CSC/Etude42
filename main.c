@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 // #include "file_manager.h"
 // #include "display.h"
@@ -11,12 +12,9 @@ void start_editor(void);
 int main(int argc, char *argv[])
 {
     int commandline_arg_index;
-
     char *path_name;
-
     int path_arg_count;
-
-    commandline_arg_index = 1;
+    int single_dash_option_length;
 
     path_arg_count = 0;
 
@@ -29,17 +27,52 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    commandline_arg_index = 1;
+    path_name = NULL;
+
     while (commandline_arg_index < argc)
     {
+        single_dash_option_length = 1;
+
         if (argv[commandline_arg_index][0] == '-')
         {
-            // コマンドラインオプションかどうかの区別する条件式
+            // コマンドラインオプションかどうかを区別する条件式
+            
+            if (argv[commandline_arg_index][1] == '-')
+            {
+                if (strcmp(&argv[commandline_arg_index][2], "help") == 0)
+                {
+                    puts("helpに頼るな");
+                    // 処理
+                }
 
-            // if (argv[commandline_arg_index][1] == 'h') {}
-            //  コマンドラインオプション判別の例
+                else
+                {
+                    printf("%sは存在しないオプションです\n", argv[commandline_arg_index]);
+                    // 処理
+                }
+            }
 
-            printf("オプション: %s\n", argv[commandline_arg_index]);
-            // 入力されたオプションの確認(テスト)
+            else
+            {
+                do
+                {
+                    switch (argv[commandline_arg_index][single_dash_option_length])
+                    {
+                        case 'h':
+                            puts("helpに頼るな");
+                            // 処理
+                            break;
+                        default:
+                            printf("%cは存在しないオプションです\n", argv[commandline_arg_index][single_dash_option_length]);
+                            break;
+                    }
+
+                    single_dash_option_length++;
+                }
+                while (argv[commandline_arg_index][single_dash_option_length] != '\0');
+
+            }
         }
 
         else
@@ -57,18 +90,30 @@ int main(int argc, char *argv[])
                 return 0;
             }
 
-            path_name = argv[1];
+            path_name = argv[commandline_arg_index];
             // path_nameにpathを代入
-
-            // example_function(path_name);
-            //  file_managerへファイルの読み込みを指示
-            //  file_managerから他のファイルの関数を呼び出してエディタが起動する
-
-            printf("path_nameのテスト: %s\n", path_name);
-            // path_nameのテスト
         }
-
         commandline_arg_index++;
+
+    }
+
+    if (path_name != NULL)
+    {
+        // example_function(path_name);
+        //  file_managerへファイルの読み込みを指示
+        //  file_managerから他のファイルの関数を呼び出してエディタが起動する
+
+        printf("path_name: %s\n", path_name);
+        // path_nameのテスト
+    }
+
+    else
+    {
+        puts("パスが入力されていません");
+        // オプションによって発生する分岐は上で行われるので、ここでパスが入力されていないのはエラーとみなす
+        // なお、ここをelse ifに変えて別の実装をするのでも良い
+
+        return 0;
     }
 
     return 0;
