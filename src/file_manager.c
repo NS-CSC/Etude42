@@ -90,7 +90,7 @@ FILE* get_file_pointer(const char* file_path)
 int read_file(const char* file_path)
 {
     FILE* fp;
-    char* line;              // getline用のバッファ
+    char* line;                     // getline用のバッファ
     char* content[LIMIT_LINE_LEN];  // とりえず10000行読み込める
     size_t len;
     ssize_t read;
