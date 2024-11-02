@@ -5,15 +5,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_LEN 256    // 一行の長さの最大値
-#define LINE_LEN 1000  // ファイルの行数
+#include "display.h"
 
-typedef struct FileInfo
-{
-    char* content[LINE_LEN];
-    int file_len;
-    int is_exist;  // 存在: 1 存在しない: -1
-} FileInfo;
+#define LIMIT_LINE_LEN 10000
 
 // 読み込み権限があるか
 int check_read_permission(const char* filename)
@@ -93,34 +87,32 @@ FILE* get_file_pointer(const char* file_path)
     return NULL;
 }
 
-FileInfo read_file(const char* file_path)
+int read_file(const char* file_path)
 {
     FILE* fp;
-    char* content[LINE_LEN];
-    char line_buffer[MAX_LEN];
-    char* result;
-    int file_len;
-    file_len = 0;
-    FileInfo file_info;
-    file_info.file_len = 0;
-    file_info.is_exist = -1;
+    char* line = NULL;              // getline用のバッファ
+    char* content[LIMIT_LINE_LEN];  // とりえず10000行読み込める
+    size_t len = 0;
+    ssize_t read;
+    int count;
+
+    count = 0;
+
     fp = get_file_pointer(file_path);
+
     if (fp == NULL)
     {
         fprintf(stderr, "Failed to open or create file: %s\n", file_path);
-        return file_info;
+        return -1;
     }
 
-    while ((result = fgets(line_buffer, MAX_LEN, fp)) != NULL)
+    while ((read = getline(&line, &len, fp)) != -1)
     {
-        char* p = (char*)malloc(sizeof(char*) * sizeof(line_buffer));
-        strcpy(p, result);
-        file_info.content[file_len] = p;
-        file_len++;
+        content[count] = strdup(line);
+        count++;
     }
 
-    file_info.is_exist = 1;
-    file_info.file_len = file_len;
+    free(line);
 
     const int close_result = fclose(fp);
 
@@ -128,10 +120,12 @@ FileInfo read_file(const char* file_path)
     {
         fprintf(stderr, "Error closing file %s: %s\n", file_path,
                 strerror(errno));
-        return file_info;
+        return -1;
     }
 
-    return file_info;
+    // render_screen(content)
+    // 描画については後にdisplay.cができてから
+    return 0;
 }
 
 int save_file(const char* file_path, const char* data)
@@ -175,5 +169,16 @@ int save_file(const char* file_path, const char* data)
         return -1;
     }
 
+    return 0;
+}
+
+int main(void)
+{
+    int result;
+    int i;
+    i = 0;
+    result = 0;
+    // result = read_file("../test.txt");
+    result = read_file("./file_manager.c");
     return 0;
 }
