@@ -1,17 +1,18 @@
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 #include <unistd.h>
 
-#define MAX_LEN 256 // 一行の長さの最大値
-#define LINE_LEN 1000 // ファイルの行数
+#define MAX_LEN 256    // 一行の長さの最大値
+#define LINE_LEN 1000  // ファイルの行数
 
-typedef struct FileInfo {
+typedef struct FileInfo
+{
     char* content[LINE_LEN];
     int file_len;
-    int is_exist; // 存在: 1 存在しない: -1
+    int is_exist;  // 存在: 1 存在しない: -1
 } FileInfo;
 
 // 書き込み権限があるか
@@ -64,7 +65,6 @@ FILE* get_file_pointer(const char* file_path)
     return NULL;
 }
 
-
 FileInfo read_file(const char* file_path)
 {
     FILE* fp;
@@ -84,23 +84,24 @@ FileInfo read_file(const char* file_path)
     }
 
     while ((result = fgets(line_buffer, MAX_LEN, fp)) != NULL)
-    {   
+    {
         char* p = (char*)malloc(sizeof(char*) * sizeof(line_buffer));
         strcpy(p, result);
         file_info.content[file_len] = p;
-        file_len ++;
+        file_len++;
     }
 
     file_info.is_exist = 1;
     file_info.file_len = file_len;
 
     const int close_result = fclose(fp);
-    
+
     if (close_result != 0)
     {
-        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
+        fprintf(stderr, "Error closing file %s: %s\n", file_path,
+                strerror(errno));
         return file_info;
     }
-    
+
     return file_info;
 }
