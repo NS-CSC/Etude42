@@ -104,24 +104,3 @@ FileInfo read_file(const char* file_path)
     
     return file_info;
 }
-
-int main(void)
-{
-    FileInfo result;
-    int i;
-    i = 0;
-    result = read_file("../main.c");
-    if (result.is_exist == -1)
-    {
-        return -1;
-    } else
-    {
-        while (result.content[i] != NULL)
-        {
-            puts(result.content[i]);
-            i++;
-        }
-        
-    }
-    return 0;
-}
