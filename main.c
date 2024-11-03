@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         if (argv[commandline_arg_index][0] == '-')
         {
             // コマンドラインオプションかどうかを区別する条件式
-            
+
             if (argv[commandline_arg_index][1] == '-')
             {
                 if (strcmp(&argv[commandline_arg_index][2], "help") == 0)
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     printf("%sは存在しないオプションです\n",
-                        argv[commandline_arg_index]);
+                            argv[commandline_arg_index]);
                     // 処理
                 }
             }
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
                             break;
                         default:
                             printf("%cは存在しないオプションです\n",
-                                argv[commandline_arg_index]
-                                    [single_dash_option_length]);
+                                    argv[commandline_arg_index]
+                                        [single_dash_option_length]);
                             break;
                     }
 
@@ -76,7 +76,6 @@ int main(int argc, char *argv[])
                 } while (
                     argv[commandline_arg_index][single_dash_option_length] !=
                     '\0');
-
             }
         }
 
@@ -94,7 +93,7 @@ int main(int argc, char *argv[])
 
                 return 0;
             }
-            
+
             path_name = argv[commandline_arg_index];
             // path_nameにpathを代入
         }
