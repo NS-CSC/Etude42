@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
 
                 else
                 {
-                    printf("%sは存在しないオプションです\n", argv[commandline_arg_index]);
+                    printf("%sは存在しないオプションです\n",
+                        argv[commandline_arg_index]);
                     // 処理
                 }
             }
@@ -57,20 +58,24 @@ int main(int argc, char *argv[])
             {
                 do
                 {
-                    switch (argv[commandline_arg_index][single_dash_option_length])
+                    switch (
+                        argv[commandline_arg_index][single_dash_option_length])
                     {
                         case 'h':
                             puts("helpに頼るな");
                             // 処理
                             break;
                         default:
-                            printf("%cは存在しないオプションです\n", argv[commandline_arg_index][single_dash_option_length]);
+                            printf("%cは存在しないオプションです\n",
+                                argv[commandline_arg_index]
+                                    [single_dash_option_length]);
                             break;
                     }
 
                     single_dash_option_length++;
-                }
-                while (argv[commandline_arg_index][single_dash_option_length] != '\0');
+                } while (
+                    argv[commandline_arg_index][single_dash_option_length] !=
+                    '\0');
 
             }
         }
@@ -89,12 +94,12 @@ int main(int argc, char *argv[])
 
                 return 0;
             }
-
+            
             path_name = argv[commandline_arg_index];
             // path_nameにpathを代入
         }
-        commandline_arg_index++;
 
+        commandline_arg_index++;
     }
 
     if (path_name != NULL)
