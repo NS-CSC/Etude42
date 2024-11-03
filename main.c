@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     printf("%sは存在しないオプションです\n",
-                            argv[commandline_arg_index]);
+                           argv[commandline_arg_index]);
                     // 処理
                 }
             }
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
                             break;
                         default:
                             printf("%cは存在しないオプションです\n",
-                                    argv[commandline_arg_index]
-                                        [single_dash_option_length]);
+                                   argv[commandline_arg_index]
+                                       [single_dash_option_length]);
                             break;
                     }
 
