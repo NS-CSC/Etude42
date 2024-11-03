@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "display.h"
+#include "file_manager.h"
 
 #define LIMIT_LINE_LEN 10000
 
@@ -171,16 +172,5 @@ int save_file(const char* file_path, const char* data)
         return -1;
     }
 
-    return 0;
-}
-
-int main(void)
-{
-    int result;
-    int i;
-    i = 0;
-    result = 0;
-    // result = read_file("../test.txt");
-    result = read_file("./file_manager.c");
     return 0;
 }
