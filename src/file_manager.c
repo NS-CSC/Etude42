@@ -1,3 +1,5 @@
+#include "file_manager.h"
+
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
@@ -6,7 +8,6 @@
 #include <unistd.h>
 
 #include "display.h"
-#include "file_manager.h"
 
 #define LIMIT_LINE_LEN 10000
 
