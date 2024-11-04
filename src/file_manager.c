@@ -1,7 +1,13 @@
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "display.h"
+
+#define LIMIT_LINE_LEN 10000
 
 // 読み込み権限があるか
 int check_read_permission(const char* filename)
@@ -79,6 +85,49 @@ FILE* get_file_pointer(const char* file_path)
 
     printf("Error: %s", strerror(errno));
     return NULL;
+}
+
+int read_file(const char* file_path)
+{
+    FILE* fp;
+    char* line;                     // getline用のバッファ
+    char* content[LIMIT_LINE_LEN];  // とりえず10000行読み込める
+    size_t len;
+    ssize_t read;
+    int count;
+
+    line = NULL;
+    len = 0;
+    count = 0;
+
+    fp = get_file_pointer(file_path);
+
+    if (fp == NULL)
+    {
+        fprintf(stderr, "Failed to open or create file: %s\n", file_path);
+        return -1;
+    }
+
+    while ((read = getline(&line, &len, fp)) != -1)
+    {
+        content[count] = strdup(line);
+        count++;
+    }
+
+    free(line);
+
+    const int close_result = fclose(fp);
+
+    if (close_result != 0)
+    {
+        fprintf(stderr, "Error closing file %s: %s\n", file_path,
+                strerror(errno));
+        return -1;
+    }
+
+    // render_screen(content)
+    // 描画については後にdisplay.cができてから
+    return 0;
 }
 
 int save_file(const char* file_path, const char* data)
