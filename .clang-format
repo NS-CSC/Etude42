@@ -1,6 +1,12 @@
 BasedOnStyle: Google
 IndentWidth: 4
-BreakBeforeBraces: Custom
+BreakBeforeBraces: Allman
+PointerAlignment: Right
+ReflowComments: false
+SpaceBeforeAssignmentOperators: true
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+AlignAfterOpenBracket: DontAlign
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: true
