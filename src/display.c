@@ -13,7 +13,7 @@ int get_digits(int number);
 // 十進数の桁数を求める関数
 void input_handler(int indent_offset, char *file_data[], int current_max_lines);
 // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
-void move_mouse(int *mouse_position_x, int *mouse_position_y);
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y);
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
@@ -114,11 +114,11 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
 {
     // 臨時の入力処理を行う関数
     // 引数として行数インデントの数を持つ
-    int mouse_position_x;
-    int mouse_position_y;
+    int cursor_pos_x;
+    int cursor_pos_y;
 
-    mouse_position_x = 0;
-    mouse_position_y = indent_offset;
+    cursor_pos_x = 0;
+    cursor_pos_y = indent_offset;
 
     move(0, indent_offset);
 
@@ -127,35 +127,35 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
         switch (getch())
         {
             case KEY_UP:
-                if (mouse_position_x > 0)
+                if (cursor_pos_x > 0)
                 {
-                    mouse_position_x--;
-                    move_mouse(&mouse_position_x, &mouse_position_y);
+                    cursor_pos_x--;
+                    move_mouse(&cursor_pos_x, &cursor_pos_y);
                 }
                 // 移動させる関数はほしい。仮想的な座標と実際の座標は違うので、マウスのxy位置（ポインタ）と文字列の長さがあるとよい。イメージとしては、moveを変える感じ。
 
                 // 必要そうな情報: moveの全てを動かす行の長さの最後にしたりする。ただ、そもそも右移動はプラス処理も条件式を取る必要がある。だから一旦、今の行の長さが必要。←シンプルにsizeofにするとバイト数が違う文字で弾かれそうな気がするからやり方を聞いておいた方が良さそう。
-                // example_function(&mouse_position_x, &mouse_position_y)
+                // example_function(&cursor_pos_x, &cursor_pos_y)
                 break;
             case KEY_DOWN:
-                if (mouse_position_x < current_max_lines - 1)
+                if (cursor_pos_x < current_max_lines - 1)
                 {
-                    mouse_position_x++;
-                    move_mouse(&mouse_position_x, &mouse_position_y);
+                    cursor_pos_x++;
+                    move_mouse(&cursor_pos_x, &cursor_pos_y);
                 }
                 break;
             case KEY_LEFT:
-                if (mouse_position_y > indent_offset)
+                if (cursor_pos_y > indent_offset)
                 {
-                    mouse_position_y--;
-                    move_mouse(&mouse_position_x, &mouse_position_y);
+                    cursor_pos_y--;
+                    move_mouse(&cursor_pos_x, &cursor_pos_y);
                 }
                 break;
             case KEY_RIGHT:
-                if (mouse_position_y <= strlen_utf8(file_data[mouse_position_x]) + 1)
+                if (cursor_pos_y <= strlen_utf8(file_data[cursor_pos_x]) + 1)
                 {
-                    mouse_position_y++;
-                    move_mouse(&mouse_position_x, &mouse_position_y);
+                    cursor_pos_y++;
+                    move_mouse(&cursor_pos_x, &cursor_pos_y);
                 }
                 break;
             case 'q':
@@ -166,11 +166,11 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
     return;
 }
 
-void move_mouse(int *mouse_position_x, int *mouse_position_y)
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y)
 {
     // これ他にも引数必要では?
     // 処理
-    move(*mouse_position_x, *mouse_position_y);
+    move(*cursor_pos_x, *cursor_pos_y);
 
     return;
 }
