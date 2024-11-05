@@ -173,19 +173,19 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned sho
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
     // これ他にも引数必要では?
-    
+
     if (*cursor_pos_y > line_len - 1)
     {
         if (left_arrow_flag == 1)
         {
             *cursor_pos_y = line_len - 2;
         }
-        
+
         else
         {
             move(*cursor_pos_x, line_len - 1);
 
-            return;        
+            return;
         }
     }
 
