@@ -7,10 +7,10 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "file_manager.h"
-#include "display.h"
-#include "input_handler.h"
 #include "config.h"
+#include "display.h"
+#include "file_manager.h"
+#include "input_handler.h"
 
 FILE *get_file_pointer(const char *file_path);
 // ファイルのポインタを返す関数
