@@ -169,7 +169,7 @@ int save_file(const char *file_path, const char *data)
         if (close_result != 0)
         {
             fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
-    
+
             return -1;
         }
 
