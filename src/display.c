@@ -1,10 +1,9 @@
 #include <ncurses.h>
 
-// #include "file_manager.h"
-// #include "display.h"
-// #include "input_handler.h"
-// #include "config.h"
-//  必要に応じて変更する
+#include "config.h"
+#include "display.h"
+#include "file_manager.h"
+#include "input_handler.h"
 
 void render_screen(char *file_data[], int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
@@ -64,9 +63,8 @@ int main(void)
 
 void render_screen(char *file_data[], int current_max_lines)
 {
-    // 画面を描画する関数
-    // これ今は同時いろいろやるようになってるから、機能ごとに分割して考えて、画面を描画するだけの関数があっていいかもしれない
-    // そもそもとして、render_screenの後にinput系統を読んでもらった方が賢明かもしれない
+    // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
+    // 関数の中身を分割して別々に呼んでもらう形に変更する
 
     int number;
     int indent_space;
@@ -77,10 +75,12 @@ void render_screen(char *file_data[], int current_max_lines)
     initscr();
     noecho();
     keypad(stdscr, TRUE);
+    // ncursesの初期設定
 
     while (file_data[number] != NULL)
     {
         mvprintw(number, 0, "%*d %s", indent_space, number + 1, file_data[number]);
+
         number++;
     }
 
@@ -102,6 +102,7 @@ int get_digits(int number)
     while (number >= 10)
     {
         number /= 10;
+
         answer++;
     }
 
@@ -110,8 +111,9 @@ int get_digits(int number)
 
 void input_handler(int indent_offset, char *file_data[], int current_max_lines)
 {
-    // 臨時の入力処理を行う関数
+    // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
     // 引数として行数インデントの数を持つ
+
     int cursor_pos_x;
     int cursor_pos_y;
 
@@ -163,13 +165,14 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
                 break;
         }
     }
+
     return;
 }
 
 void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short int left_arrow_flag)
 {
-    // ポインタ型の引数である必要がなくなったら適宜通常の変数に戻す
-    // 使っていないパターンと戻すパターンがある
+    // 仮想的なマウスの位置を実際の位置に移動させる関数
+    // これ他にも引数必要では?
     
     if (*cursor_pos_y > line_len - 1)
     {
@@ -193,6 +196,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned sho
 
 int strlen_utf8(const char *str)
 {
+    // マルチバイト文字を含めた文字列の長さを返す関数
     int str_index;
     int number;
 

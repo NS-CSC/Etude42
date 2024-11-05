@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 
-// #include "file_manager.h"
-// #include "display.h"
-// #include "input_handler.h"
-// #include "config.h"
-//  これらは他の進捗に応じて変更する
-
-void start_editor(void);
+#include "config.h"
+#include "display.h"
+#include "file_manager.h"
+#include "input_handler.h"
 
 int main(int argc, char *argv[])
 {
+    // コマンドライン引数の処理をする関数
+
     int commandline_arg_index;
     char *path_name;
     int path_arg_count;
@@ -43,13 +42,11 @@ int main(int argc, char *argv[])
                 if (strcmp(&argv[commandline_arg_index][2], "help") == 0)
                 {
                     puts("helpに頼るな");
-                    // 処理
                 }
 
                 else
                 {
                     printf("%sは存在しないオプションです\n", argv[commandline_arg_index]);
-                    // 処理
                 }
             }
 
@@ -61,7 +58,6 @@ int main(int argc, char *argv[])
                     {
                         case 'h':
                             puts("helpに頼るな");
-                            // 処理
                             break;
                         default:
                             printf("%cは存在しないオプションです\n", argv[commandline_arg_index][single_dash_option_length]);
@@ -109,7 +105,7 @@ int main(int argc, char *argv[])
     {
         puts("パスが入力されていません");
         // オプションによって発生する分岐は上で行われるので、ここでパスが入力されていないのはエラーとみなす
-        // なお、ここをelse ifに変えて別の実装をするのでも良い
+        // なお、ここをelse...ifに変えて別の実装をするのでも良い
 
         return 0;
     }
