@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 
         FILE *file_pointer = get_file_pointer(path_name);
         // 戻り値がFILE型なのでNULL判定できるようにしておく
-        
+
         if (file_pointer == NULL)
         {
             puts("FILEがNULLです(テスト)");
