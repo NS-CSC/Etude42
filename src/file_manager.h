@@ -1,7 +1,15 @@
 #ifndef FILE_MANAGER_H
 #define FILE_MANAGER_H
 
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "file_manager.h"
+#include "display.h"
 
 FILE *get_file_pointer(const char *file_path);
 // ファイルのポインタを返す関数
