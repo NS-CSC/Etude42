@@ -4,10 +4,10 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "file_manager.h"
-#include "display.h"
-#include "input_handler.h"
 #include "config.h"
+#include "display.h"
+#include "file_manager.h"
+#include "input_handler.h"
 
 #define LIMIT_LINE_LEN 10000
 
@@ -79,7 +79,7 @@ int read_file(const char *file_path)
 
     free(line);
 
-    int close_result
+    int close_result;
 
     close_result = fclose(fp);
 
@@ -124,7 +124,7 @@ int save_file(const char *file_path, const char *data)
 
         int close_result;
 
-        close_result =  fclose(fp);
+        close_result = fclose(fp);
 
         if (close_result != 0)
         {
