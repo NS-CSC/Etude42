@@ -12,4 +12,4 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y);
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
 
-#endif  // DISPLAY_H
+#endif // DISPLAY_H
