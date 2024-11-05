@@ -6,6 +6,8 @@
 
 #include "file_manager.h"
 #include "display.h"
+#include "input_handler.h"
+#include "config.h"
 
 #define LIMIT_LINE_LEN 10000
 
