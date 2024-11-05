@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "file_manager.h"
-#include "display.h"
-#include "input_handler.h"
 #include "config.h"
+#include "display.h"
+#include "file_manager.h"
+#include "input_handler.h"
 
 int main(int argc, char *argv[])
 {
