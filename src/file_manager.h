@@ -9,6 +9,8 @@
 
 #include "file_manager.h"
 #include "display.h"
+#include "input_handler.h"
+#include "config.h"
 
 FILE *get_file_pointer(const char *file_path);
 // ファイルのポインタを返す関数
