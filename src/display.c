@@ -1,10 +1,10 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "file_manager.h"
-#include "display.h"
-#include "input_handler.h"
 #include "config.h"
+#include "display.h"
+#include "file_manager.h"
+#include "input_handler.h"
 
 void render_screen(char *file_data[], int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
