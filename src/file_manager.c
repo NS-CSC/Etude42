@@ -11,68 +11,78 @@
 
 #define LIMIT_LINE_LEN 10000
 
-// 読み込み権限があるか
-int check_read_permission(const char* filename)
-{
-    if (access(filename, R_OK) == -1)
-    {
-        if (errno == EACCES)
-        {
-            fprintf(stderr, "ERROR: '%s' への読み込み権限がありません\n",
-                    filename);
+FILE *get_file_pointer(const char *file_path);
+// ファイルのポインタを返す関数
+int read_file(const char *file_path)
+// ファイルのパスを引数に指定するとファイルを読み込む関数
+int save_file(const char *file_path, const char *data)
+// ファイルをセーブする関数
 
-            return -1;
+// // 読み込み権限があるか
+// int check_read_permission(const char *filename)
+// {
+//     if (access(filename, R_OK) == -1)
+//     {
+//         if (errno == EACCES)
+//         {
+//             fprintf(stderr, "ERROR: '%s' への読み込み権限がありません\n", filename);
 
-        } else if (errno == ENOENT)
-        {
-            fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
+//             return -1;
 
-            return -2;
-        } else
-        {
-            fprintf(stderr, "ERROR: %s\n", strerror(errno));
+//         } else if (errno == ENOENT)
+//         {
+//             fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
 
-            return -3;
-        }
-    }
-    // 読み込み権限あり
-    return 0;
-}
+//             return -2;
+//         } else
+//         {
+//             fprintf(stderr, "ERROR: %s\n", strerror(errno));
 
-// 書き込み権限があるか
-int check_write_permission(const char* filename)
-{
-    if (access(filename, W_OK) == -1)
-    {
-        if (errno == EACCES)
-        {
-            fprintf(stderr, "ERROR:'%s'への書き込み権限がありません\n",
-                    filename);
+//             return -3;
+//         }
+//     }
+//     // 読み込み権限あり
+//     return 0;
+// }
 
-            return -1;
-        } else if (errno == ENOENT)
-        {
-            fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
+// // 書き込み権限があるか
+// int check_write_permission(const char *filename)
+// {
+//     if (access(filename, W_OK) == -1)
+//     {
+//         if (errno == EACCES)
+//         {
+//             fprintf(stderr, "ERROR:'%s'への書き込み権限がありません\n", filename);
 
-            return -2;
-        } else
-        {
-            fprintf(stderr, "ERROR: %s\n", strerror(errno));
+//             return -1;
+//         }
 
-            return -3;
-        }
-    }
-    // 書き込み権限あり
-    return 0;
-}
+//         else if (errno == ENOENT)
+//         {
+//             fprintf(stderr, "ERROR: ファイル '%s' が存在しません\n", filename);
+
+//             return -2;
+//         }
+
+//         else
+//         {
+//             fprintf(stderr, "ERROR: %s\n", strerror(errno));
+
+//             return -3;
+//         }
+//     }
+//     // 書き込み権限あり
+//     return 0;
+// }
 
 // ファイルのポインタを返す関数
-FILE* get_file_pointer(const char* file_path)
+FILE *get_file_pointer(const char *file_path)
 {
-    FILE* file;
+    FILE *file;
 
     // ファイルが存在して正常に開けた時の処理
     file = fopen(file_path, "r+");
+
     if (file != NULL)
     {
         return file;
@@ -80,6 +90,7 @@ FILE* get_file_pointer(const char* file_path)
 
     // ファイルが存在して新しく作成する処理
     file = fopen(file_path, "a+");
+
     if (file != NULL)
     {
         return file;
@@ -89,11 +100,12 @@ FILE* get_file_pointer(const char* file_path)
     return NULL;
 }
 
-int read_file(const char* file_path)
+// ファイルのパスを引数に指定するとファイルを読み込む関数
+int read_file(const char *file_path)
 {
-    FILE* fp;
-    char* line;                     // getline用のバッファ
-    char* content[LIMIT_LINE_LEN];  // とりえず10000行読み込める
+    FILE *fp;
+    char *line;                     // getline用のバッファ
+    char *content[LIMIT_LINE_LEN];  // とりえず10000行読み込める
     size_t len;
     ssize_t read;
     int count;
@@ -122,8 +134,7 @@ int read_file(const char* file_path)
 
     if (close_result != 0)
     {
-        fprintf(stderr, "Error closing file %s: %s\n", file_path,
-                strerror(errno));
+        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
         return -1;
     }
 
@@ -132,9 +143,10 @@ int read_file(const char* file_path)
     return 0;
 }
 
-int save_file(const char* file_path, const char* data)
+// ファイルをセーブする関数
+int save_file(const char *file_path, const char *data)
 {
-    FILE* fp = get_file_pointer(file_path);
+    FILE *fp = get_file_pointer(file_path);
 
     if (fp == NULL)
     {
@@ -147,16 +159,15 @@ int save_file(const char* file_path, const char* data)
     // 書き込みが成功したか確認
     if (write_result < 0)
     {
-        fprintf(stderr, "Error writing to file %s: %s\n", file_path,
-                strerror(errno));
+        fprintf(stderr, "Error writing to file %s: %s\n", file_path, strerror(errno));
 
         const int close_result = fclose(fp);
 
         // クローズが成功したか確認
         if (close_result != 0)
         {
-            fprintf(stderr, "Error closing file %s: %s\n", file_path,
-                    strerror(errno));
+            fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
+    
             return -1;
         }
 
@@ -168,8 +179,8 @@ int save_file(const char* file_path, const char* data)
     // クローズが成功したか確認
     if (close_result != 0)
     {
-        fprintf(stderr, "Error closing file %s: %s\n", file_path,
-                strerror(errno));
+        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
+
         return -1;
     }
 
