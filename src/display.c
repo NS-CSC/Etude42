@@ -86,7 +86,7 @@ void render_screen(char *file_data[], int current_max_lines)
     }
 
     input_handler(indent_space + 1, file_data, current_max_lines);
- 
+
     endwin();
 
     return;
@@ -190,6 +190,6 @@ int strlen_utf8(const char *str)
 
         str_index++;
     }
-   
+
     return number + 1;
 }
