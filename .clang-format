@@ -8,6 +8,7 @@ SpacesInCStyleCastParentheses: false
 AlignAfterOpenBracket: DontAlign
 ColumnLimit: 0
 AllowAllParametersOfDeclarationOnNextLine: false
+AlwaysBreakAfterReturnType: None
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: true
