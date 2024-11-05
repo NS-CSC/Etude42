@@ -10,4 +10,4 @@ int read_file(const char *file_path)
 int save_file(const char *file_path, const char *data)
 // ファイルをセーブする関数
 
-#endif  // FILE_MANAGER_H
+#endif // FILE_MANAGER_H
