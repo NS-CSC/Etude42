@@ -65,8 +65,7 @@ int main(int argc, char *argv[])
                     }
 
                     single_dash_option_length++;
-                }
-                while (argv[commandline_arg_index][single_dash_option_length] != '\0');
+                } while (argv[commandline_arg_index][single_dash_option_length] != '\0');
             }
         }
 
