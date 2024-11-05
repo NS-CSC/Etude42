@@ -1,11 +1,11 @@
 #ifndef FILE_MANAGER_H
 #define FILE_MANAGER_H
 
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "file_manager.h"
 #include "display.h"
