@@ -7,6 +7,7 @@ SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 AlignAfterOpenBracket: DontAlign
 ColumnLimit: 0
+AllowAllParametersOfDeclarationOnNextLine: false
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: true
