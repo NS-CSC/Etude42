@@ -1,6 +1,14 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <ncurses.h>
+#include <string.h>
+
+#include "file_manager.h"
+#include "display.h"
+#include "input_handler.h"
+#include "config.h"
+
 void render_screen(char *file_data[], int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 int get_digits(int number);
