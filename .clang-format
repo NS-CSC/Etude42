@@ -6,7 +6,7 @@ SpaceBeforeAssignmentOperators: true
 SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 AlignAfterOpenBracket: DontAlign
-ColumnLimit: 0
+ColumnLimit: 500
 AllowAllParametersOfDeclarationOnNextLine: false
 AlwaysBreakAfterReturnType: None
 BraceWrapping:
