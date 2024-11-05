@@ -6,6 +6,7 @@ SpaceBeforeAssignmentOperators: true
 SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 AlignAfterOpenBracket: DontAlign
+ColumnLimit: 0
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: true
