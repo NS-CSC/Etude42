@@ -66,7 +66,8 @@ int main(void)
 void render_screen(char *file_data[], int current_max_lines)
 {
     // 画面を描画する関数
-    // これ今は同時いろいろやるようになってるから、機能ごとに分割して考えて、画面を描画するだけの関数があっていいかもしれない。
+    // これ今は同時いろいろやるようになってるから、機能ごとに分割して考えて、画面を描画するだけの関数があっていいかもしれない
+    // そもそもとして、render_screenの後にinput系統を読んでもらった方が賢明かもしれない
 
     int number;
     int indent_space;
@@ -105,8 +106,6 @@ int get_digits(int number)
         answer++;
     }
 
-    //printf("桁数は%dです\n", answer);
-
     return answer;
 }
 
@@ -132,9 +131,11 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
                     cursor_pos_x--;
                     move_mouse(&cursor_pos_x, &cursor_pos_y);
                 }
-                // 移動させる関数はほしい。仮想的な座標と実際の座標は違うので、マウスのxy位置（ポインタ）と文字列の長さがあるとよい。イメージとしては、moveを変える感じ。
+                // 移動させる関数はほしい。仮想的な座標と実際の座標は違うので、マウスのxy位置（ポインタ）と文字列の長さがあるとよい。イメージとしては、moveを変える感じ
 
-                // 必要そうな情報: moveの全てを動かす行の長さの最後にしたりする。ただ、そもそも右移動はプラス処理も条件式を取る必要がある。だから一旦、今の行の長さが必要。←シンプルにsizeofにするとバイト数が違う文字で弾かれそうな気がするからやり方を聞いておいた方が良さそう。
+                // 必要そうな情報: moveの全てを動かす行の長さの最後にしたりする
+                // ただ、そもそも右移動はプラス処理も条件式を取る必要がある。だから一旦、今の行の長さが必要
+                // シンプルにsizeofにするとバイト数が違う文字で弾かれそうな気がするからやり方を聞いておいた方が良さそう
                 // example_function(&cursor_pos_x, &cursor_pos_y)
                 break;
             case KEY_DOWN:
@@ -188,7 +189,7 @@ int strlen_utf8(const char *str)
         }
 
         str_index++;
-     }
+    }
    
     return number + 1;
 }
