@@ -18,6 +18,59 @@ int read_file(const char *file_path);
 int save_file(const char *file_path, const char *data);
 // ファイルをセーブする関数
 
+int read_file(const char *file_path)
+{
+    // ファイルのパスを引数に指定するとファイルを読み込む関数
+
+    FILE *fp;
+    char *line;
+    // getline用のバッファ
+    char *content[LIMIT_LINE_LEN];
+    // とりえず10000行読み込める
+    size_t len;
+    ssize_t read;
+    int count;
+    int close_result;
+    int line_count;
+
+    line = NULL;
+    len = 0;
+    count = 0;
+
+    fp = get_file_pointer(file_path);
+
+    if (fp == NULL)
+    {
+        fprintf(stderr, "Failed to open or create file: %s\n", file_path);
+
+        return -1;
+    }
+
+    while ((read = getline(&line, &len, fp)) != -1)
+    {
+        content[count] = strdup(line);
+
+        count++;
+    }
+
+    free(line);
+
+    close_result = fclose(fp);
+
+    if (close_result != 0)
+    {
+        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
+
+        return -1;
+    }
+
+    line_count = 0;
+
+    render_screen(content, count);
+
+    return 0;
+}
+
 FILE *get_file_pointer(const char *file_path)
 {
     // ファイルのポインタを返す関数
@@ -45,62 +98,12 @@ FILE *get_file_pointer(const char *file_path)
     return NULL;
 }
 
-int read_file(const char *file_path)
-{
-    // ファイルのパスを引数に指定するとファイルを読み込む関数
-
-    FILE *fp;
-    char *line;
-    // getline用のバッファ
-    char *content[LIMIT_LINE_LEN];
-    // とりえず10000行読み込める
-    size_t len;
-    ssize_t read;
-    int count;
-
-    line = NULL;
-    len = 0;
-    count = 0;
-
-    fp = get_file_pointer(file_path);
-
-    if (fp == NULL)
-    {
-        fprintf(stderr, "Failed to open or create file: %s\n", file_path);
-
-        return -1;
-    }
-
-    while ((read = getline(&line, &len, fp)) != -1)
-    {
-        content[count] = strdup(line);
-        count++;
-    }
-
-    free(line);
-
-    int close_result;
-
-    close_result = fclose(fp);
-
-    if (close_result != 0)
-    {
-        fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
-
-        return -1;
-    }
-
-    // render_screen(content)
-    // 描画については後にdisplay.cができてから
-    // ↑最後の行数も合わせて呼び出したら普通に動作します
-
-    return 0;
-}
-
 int save_file(const char *file_path, const char *data)
 {
     // ファイルをセーブする関数
 
+    int write_result;
+    int close_result;
     FILE *fp;
 
     fp = get_file_pointer(file_path);
@@ -111,8 +114,6 @@ int save_file(const char *file_path, const char *data)
 
         return -1;
     }
-
-    int write_result;
 
     write_result = fprintf(fp, "%s", data);
 
@@ -121,8 +122,6 @@ int save_file(const char *file_path, const char *data)
         // 書き込みが成功したか確認する条件式
 
         fprintf(stderr, "Error writing to file %s: %s\n", file_path, strerror(errno));
-
-        int close_result;
 
         close_result = fclose(fp);
 
@@ -137,8 +136,6 @@ int save_file(const char *file_path, const char *data)
 
         return -1;
     }
-
-    int close_result;
 
     close_result = fclose(fp);
 
