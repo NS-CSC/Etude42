@@ -19,9 +19,9 @@ int strlen_utf8(const char *str);
 // int main(void)
 // {
 //     // テストで使用するmain関数
-// 
+//
 //     char *file_data[100];
-// 
+//
 //     file_data[0] = "#include <stdio.h>";
 //     file_data[1] = "";
 //     file_data[2] = "int main(void)";
@@ -53,11 +53,11 @@ int strlen_utf8(const char *str);
 //     file_data[28] = "“Here lies John Kelly, a lawyer and an honest man.”";
 //     file_data[29] = "“How about that!” he exclaimed.";
 //     file_data[30] = "“They’ve got three people buried in one grave.”";
-// 
+//
 //     file_data[31] = NULL;
-// 
+//
 //     render_screen(file_data, 31);
-// 
+//
 //     return 0;
 // }
 

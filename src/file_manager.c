@@ -98,7 +98,6 @@ FILE *get_file_pointer(const char *file_path)
     return NULL;
 }
 
-
 int save_file(const char *file_path, const char *data)
 {
     // ファイルをセーブする関数
