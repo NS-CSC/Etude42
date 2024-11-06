@@ -11,55 +11,55 @@ int get_digits(int number);
 // 十進数の桁数を求める関数
 void input_handler(int indent_offset, char *file_data[], int current_max_lines);
 // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short int left_arrow_flag);
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short left_arrow_flag);
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
 
-int main(void)
-{
-    // テストで使用するmain関数
-
-    char *file_data[100];
-
-    file_data[0] = "#include <stdio.h>";
-    file_data[1] = "";
-    file_data[2] = "int main(void)";
-    file_data[3] = "{";
-    file_data[4] = "    char *hoge_hoge[10];";
-    file_data[5] = "    int number;";
-    file_data[6] = "";
-    file_data[7] = "    hoge_hoge[0] = \"#include <stdio.h>\";";
-    file_data[8] = "    hoge_hoge[1] = \"\";";
-    file_data[9] = "    hoge_hoge[2] = \"int main(void)\";";
-    file_data[10] = "    hoge_hoge[3] = \"{\";";
-    file_data[11] = "    hoge_hoge[4] = \"    puts(\"Hello\");\";";
-    file_data[12] = "    hoge_hoge[5] = \"    return 0;\";";
-    file_data[13] = "    hoge_hoge[6] = \"}\";";
-    file_data[14] = "    hoge_hoge[7] = NULL;";
-    file_data[15] = "";
-    file_data[16] = "    number = 0;";
-    file_data[17] = "";
-    file_data[18] = "    while (hoge_hoge[number] != NULL)";
-    file_data[19] = "    {";
-    file_data[20] = "        puts(hoge_hoge[number]);";
-    file_data[21] = "        number++;";
-    file_data[22] = "    }";
-    file_data[23] = "    return 0;";
-    file_data[24] = "}";
-    file_data[25] = "// これはC言語初心者の脳を破壊するコードです。";
-    file_data[26] = "// C言語初心者の皆様は、このコードをしっかり理解することで脳を破壊しましょう！私からのお願いです！";
-    file_data[27] = "A man visiting a graveyard saw a tombstone that read:";
-    file_data[28] = "“Here lies John Kelly, a lawyer and an honest man.”";
-    file_data[29] = "“How about that!” he exclaimed.";
-    file_data[30] = "“They’ve got three people buried in one grave.”";
-
-    file_data[31] = NULL;
-
-    render_screen(file_data, 31);
-
-    return 0;
-}
+// int main(void)
+// {
+//     // テストで使用するmain関数
+// 
+//     char *file_data[100];
+// 
+//     file_data[0] = "#include <stdio.h>";
+//     file_data[1] = "";
+//     file_data[2] = "int main(void)";
+//     file_data[3] = "{";
+//     file_data[4] = "    char *hoge_hoge[10];";
+//     file_data[5] = "    int number;";
+//     file_data[6] = "";
+//     file_data[7] = "    hoge_hoge[0] = \"#include <stdio.h>\";";
+//     file_data[8] = "    hoge_hoge[1] = \"\";";
+//     file_data[9] = "    hoge_hoge[2] = \"int main(void)\";";
+//     file_data[10] = "    hoge_hoge[3] = \"{\";";
+//     file_data[11] = "    hoge_hoge[4] = \"    puts(\"Hello\");\";";
+//     file_data[12] = "    hoge_hoge[5] = \"    return 0;\";";
+//     file_data[13] = "    hoge_hoge[6] = \"}\";";
+//     file_data[14] = "    hoge_hoge[7] = NULL;";
+//     file_data[15] = "";
+//     file_data[16] = "    number = 0;";
+//     file_data[17] = "";
+//     file_data[18] = "    while (hoge_hoge[number] != NULL)";
+//     file_data[19] = "    {";
+//     file_data[20] = "        puts(hoge_hoge[number]);";
+//     file_data[21] = "        number++;";
+//     file_data[22] = "    }";
+//     file_data[23] = "    return 0;";
+//     file_data[24] = "}";
+//     file_data[25] = "// これはC言語初心者の脳を破壊するコードです。";
+//     file_data[26] = "// C言語初心者の皆様は、このコードをしっかり理解することで脳を破壊しましょう！私からのお願いです！";
+//     file_data[27] = "A man visiting a graveyard saw a tombstone that read:";
+//     file_data[28] = "“Here lies John Kelly, a lawyer and an honest man.”";
+//     file_data[29] = "“How about that!” he exclaimed.";
+//     file_data[30] = "“They’ve got three people buried in one grave.”";
+// 
+//     file_data[31] = NULL;
+// 
+//     render_screen(file_data, 31);
+// 
+//     return 0;
+// }
 
 void render_screen(char *file_data[], int current_max_lines)
 {
@@ -169,7 +169,7 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
     return;
 }
 
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short int left_arrow_flag)
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short left_arrow_flag)
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
     // これ他にも引数必要では?

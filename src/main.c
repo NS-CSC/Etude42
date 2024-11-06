@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     char *path_name;
     int path_arg_count;
     int single_dash_option_length;
+    int exit_code;
 
     path_arg_count = 0;
 
@@ -95,19 +96,7 @@ int main(int argc, char *argv[])
     {
         // pathが存在している時の条件式
 
-        FILE *file_pointer = get_file_pointer(path_name);
-        // 戻り値がFILE型なのでNULL判定できるようにしておく
-
-        if (file_pointer == NULL)
-        {
-            puts("FILEがNULLです(テスト)");
-
-            return -1;
-        }
-
-        int exit_code = read_file(file_pointer);
-        // 引数エラーが発生している箇所
-        // いつか直す
+        exit_code = read_file(path_name);
 
         if (exit_code == -1)
         {
