@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <locale.h>
 
 #include "config.h"
 #include "display.h"
@@ -72,6 +73,7 @@ void render_screen(char *file_data[], int current_max_lines)
     number = 0;
     indent_space = get_digits(current_max_lines);
 
+    setlocale(LC_ALL, "");
     initscr();
     noecho();
     keypad(stdscr, TRUE);
@@ -132,12 +134,6 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
                     cursor_pos_x--;
                     move_mouse(&cursor_pos_x, &cursor_pos_y, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
                 }
-                // 移動させる関数はほしい。仮想的な座標と実際の座標は違うので、マウスのxy位置（ポインタ）と文字列の長さがあるとよい。イメージとしては、moveを変える感じ
-
-                // 必要そうな情報: moveの全てを動かす行の長さの最後にしたりする
-                // ただ、そもそも右移動はプラス処理も条件式を取る必要がある。だから一旦、今の行の長さが必要
-                // シンプルにsizeofにするとバイト数が違う文字で弾かれそうな気がするからやり方を聞いておいた方が良さそう
-                // example_function(&cursor_pos_x, &cursor_pos_y)
                 break;
             case KEY_DOWN:
                 if (cursor_pos_x < current_max_lines - 1)
@@ -154,7 +150,7 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
                 }
                 break;
             case KEY_RIGHT:
-                if (cursor_pos_y < strlen_utf8(file_data[cursor_pos_x]) + indent_offset - 1)
+                if (cursor_pos_y < strlen_utf8(file_data[cursor_pos_x]) + indent_offset - 2)
                 {
                     cursor_pos_y++;
                     move_mouse(&cursor_pos_x, &cursor_pos_y, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
@@ -173,8 +169,9 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned sho
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
     // これ他にも引数必要では?
+    // 移動したい方向を引数で渡すことにする
 
-    if (*cursor_pos_y > line_len - 1)
+    if (*cursor_pos_y > line_len - 2)
     {
         if (left_arrow_flag == 1)
         {
@@ -183,7 +180,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned sho
 
         else
         {
-            move(*cursor_pos_x, line_len - 1);
+            move(*cursor_pos_x, line_len - 2);
 
             return;
         }
