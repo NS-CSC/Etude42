@@ -12,7 +12,7 @@ int get_digits(int number);
 // 十進数の桁数を求める関数
 void input_handler(int indent_offset, char *file_data[], int current_max_lines);
 // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short left_arrow_flag);
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int indent_offset, int line_len, unsigned short left_arrow_flag);
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
@@ -132,28 +132,28 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
                 if (cursor_pos_x > 0)
                 {
                     cursor_pos_x--;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
                 }
                 break;
             case KEY_DOWN:
                 if (cursor_pos_x < current_max_lines - 1)
                 {
                     cursor_pos_x++;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
                 }
                 break;
             case KEY_LEFT:
                 if (cursor_pos_y > indent_offset)
                 {
                     cursor_pos_y--;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 1);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 1);
                 }
                 break;
             case KEY_RIGHT:
                 if (cursor_pos_y < strlen_utf8(file_data[cursor_pos_x]) + indent_offset - 2)
                 {
                     cursor_pos_y++;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
                 }
                 break;
             case 'q':
@@ -165,17 +165,26 @@ void input_handler(int indent_offset, char *file_data[], int current_max_lines)
     return;
 }
 
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int line_len, unsigned short left_arrow_flag)
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, int indent_offset, int line_len, unsigned short left_arrow_flag)
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
     // これ他にも引数必要では?
-    // 移動したい方向を引数で渡すことにする
+    // 今は一マスの移動のみに対応している
+    // 大きく移動させたいときは移動したい方向を引数で渡すことにする
 
     if (*cursor_pos_y > line_len - 2)
     {
         if (left_arrow_flag == 1)
         {
-            *cursor_pos_y = line_len - 2;
+            if (line_len - 3 > indent_offset)
+            {
+                *cursor_pos_y = line_len - 3;
+            }
+
+            else
+            {
+                *cursor_pos_y = indent_offset;
+            }
         }
 
         else
