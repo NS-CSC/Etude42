@@ -1,7 +1,6 @@
 #include <locale.h>
 #include <ncurses.h>
 
-
 #include "config.h"
 #include "display.h"
 #include "file_manager.h"
