@@ -6,7 +6,7 @@
 #include "file_manager.h"
 #include "input_handler.h"
 
-int main(int argc, char *argv[])
+int main(const int argc, char *argv[])
 {
     // コマンドライン引数の処理をする関数
 
