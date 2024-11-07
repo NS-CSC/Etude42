@@ -158,25 +158,25 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
 int strlen_utf8(const char *str)
 {
-     // マルチバイト文字を含めた文字列の長さを返す関数
-     int str_index;
-     int number;
- 
-     str_index = 0;
-     number = 0;
- 
-     while (str[str_index])
-     {
-         if ((str[str_index] & 0xc0) != 0x80)
-         {
-             number++;
-         }
- 
-         str_index++;
-     }
- 
-     return number + 1;
- }
+    // マルチバイト文字を含めた文字列の長さを返す関数
+    int str_index;
+    int number;
+
+    str_index = 0;
+    number = 0;
+
+    while (str[str_index])
+    {
+        if ((str[str_index] & 0xc0) != 0x80)
+        {
+            number++;
+        }
+
+        str_index++;
+    }
+
+    return number + 1;
+}
 
 // int main(void)
 // {
