@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +18,8 @@ int read_file(const char *file_path);
 // ファイルのパスを引数に指定するとファイルを読み込む関数
 int save_file(const char *file_path, const char *data);
 // ファイルをセーブする関数
+DIR *get_directory_pointer(const char *directory_path);
+// 指定された一番上のディレクトリのポインタを返す関数
 
 int read_file(const char *file_path)
 {
@@ -69,6 +72,22 @@ int read_file(const char *file_path)
     render_screen(content, count);
 
     return 0;
+}
+
+DIR *get_directory_pointer(const char *directory_path)
+{
+    // 指定された一番上のディレクトリのポインタを返す関数
+
+    DIR *dp; // DIR型ポインタ
+    dp = opendir(directory_path);
+
+    if (dp == NULL)
+    {
+        fprintf(stderr, "Error opening directory %s: %s\n", directory_path, strerror(errno));
+        return NULL;
+    }
+
+    return dp;
 }
 
 FILE *get_file_pointer(const char *file_path)
