@@ -1,5 +1,6 @@
 #include <locale.h>
 #include <ncurses.h>
+#include <stdlib.h>
 #include <wchar.h>
 
 #include "config.h"
@@ -26,14 +27,15 @@ void render_screen(char *file_data[], const int current_max_lines)
     int number;
     int indent_space;
 
-    number = 0;
-    indent_space = get_digits(current_max_lines);
-
-    setlocale(LC_ALL, "ja_JP.UTF-8");
     initscr();
     noecho();
     keypad(stdscr, TRUE);
     // ncursesの初期設定
+
+    number = 0;
+    indent_space = get_digits(current_max_lines);
+
+    setlocale(LC_ALL, "ja_JP.UTF-8");
 
     while (file_data[number] != NULL)
     {
@@ -159,6 +161,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 int strlen_utf8(const char *str)
 {
     // マルチバイト文字を含めた文字列の長さを返す関数
+
     int str_index;
     int number;
 
@@ -176,6 +179,46 @@ int strlen_utf8(const char *str)
     }
 
     return number + 1;
+}
+
+int get_char_size(const char *str)
+{
+   size_t len;
+   wchar_t *result;
+   int incriment;
+   int number;
+   int back;
+
+   len = mbstowcs(NULL, str, 0);
+
+   if (len == -1)
+   {
+      puts("マルチバイト文字を含めた文字数の長さを返す処理に失敗しました。");
+
+      return -1;
+   }
+
+   result = malloc(len * sizeof(wchar_t));
+
+   if (!result)
+   {
+      puts("mallocに失敗しました。");
+
+      return -1;
+   }
+
+   mbstowcs(result, str, len);
+
+   number = 0;
+
+   while (incriment < result[number])
+   {
+      incriment = result[number];
+
+      number++;
+   }
+
+   return back;
 }
 
 // int main(void)
