@@ -222,4 +222,3 @@ int strlen_utf8(const char *str)
 //
 //     return 0;
 // }
-
