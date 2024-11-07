@@ -29,7 +29,7 @@ void render_screen(char *file_data[], const int current_max_lines)
     number = 0;
     indent_space = get_digits(current_max_lines);
 
-    setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "ja_JP.UTF-8");
     initscr();
     noecho();
     keypad(stdscr, TRUE);
