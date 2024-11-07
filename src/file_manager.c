@@ -78,16 +78,16 @@ DIR *get_directory_pointer(const char *directory_path)
 {
     // 指定された一番上のディレクトリのポインタを返す関数
 
-    DIR *dp; // DIR型ポインタ
-    dp = opendir(directory_path);
+    DIR *dir; // DIR型ポインタ
+    dir = opendir(directory_path);
 
-    if (dp == NULL)
+    if (dir == NULL)
     {
         fprintf(stderr, "Error opening directory %s: %s\n", directory_path, strerror(errno));
         return NULL;
     }
 
-    return dp;
+    return dir;
 }
 
 FILE *get_file_pointer(const char *file_path)
