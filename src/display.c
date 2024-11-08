@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-#include "config.h"
+//#include "config.h"
 #include "display.h"
-#include "file_manager.h"
-#include "input_handler.h"
+//#include "file_manager.h"
+//#include "input_handler.h"
 
 void render_screen(char *file_data[], const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
@@ -27,8 +27,6 @@ void render_screen(char *file_data[], const int current_max_lines)
 
     int number;
     int indent_space;
-
-    //setlocale(LC_CTYPE, "ja_JP.UTF-8");
 
     initscr();
     noecho();
@@ -154,7 +152,8 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         }
     }
 
-    move(*cursor_pos_x, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y));
+    move(*cursor_pos_x, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+    // オフセットが定義されていない
     // こいつをなんとかする(y)
     // *cursor_pos_yはワイド文字を含めない今の行
     // これにマルチバイトの増加量を加算すれば勝ちでは?
