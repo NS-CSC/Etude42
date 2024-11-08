@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //#include "config.h"
 #include "display.h"
@@ -17,6 +18,6 @@ FILE *get_file_pointer(const char *file_path);
 int save_file(const char *file_path, const char *data);
 // ファイルをセーブする関数
 DIR *get_directory_pointer(const char *directory_path);
-// ディレクトリのポインタを返す関数
+// 指定された一番上のディレクトリのポインタを返す関数
 
 #endif // FILE_MANAGER_H
