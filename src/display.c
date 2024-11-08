@@ -1,4 +1,3 @@
-#include <locale.h>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <wchar.h>
@@ -18,8 +17,8 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
-int get_char_size(const char *str, int length);
-// 表示上の文字列の長さを取得する関数
+int get_char_size(char *str, int length);
+// 表示上の文字列の増加量を取得する関数
 
 void render_screen(char *file_data[], const int current_max_lines)
 {
@@ -29,7 +28,7 @@ void render_screen(char *file_data[], const int current_max_lines)
     int number;
     int indent_space;
 
-    setlocale(LC_CTYPE, "ja_JP.UTF-8");
+    //setlocale(LC_CTYPE, "ja_JP.UTF-8");
 
     initscr();
     noecho();
@@ -187,105 +186,46 @@ int strlen_utf8(const char *str)
     return number + 1;
 }
 
-int get_char_size(const char *str, int length)
+int get_char_size(char *str, int length)
 {
-   // 表示上の文字列の長さを取得する関数
+    // 表示上の文字列の増加量を取得する関数
+    //
+    int width_sum;
+    wchar_t wc;
+    int bytes_read;
+    int chars_processed;
+    char *current_ptr;
+    int width;
 
-   size_t len;
-   wchar_t *result;
-   int incriment;
-   int number;
-   int back;
+    width_sum = 0;
+    bytes_read = 0;
+    chars_processed = 0;
+    current_ptr = str;
 
-   //len = mbstowcs(NULL, str, 0);
+    // 指定された文字数(length)まで処理する
+    while (chars_processed < length && *current_ptr != '\0')
+    {
+        bytes_read = mbtowc(&wc, current_ptr, MB_CUR_MAX);
 
-   //if (len == -1)
-   //{
-   //   puts("マルチバイト文字を含めた文字数の長さを返す処理に失敗しました。");
+        if (bytes_read <= 0)
+        {
+            puts("マルチバイト文字の変換に失敗しました。");
 
-   //   return -1;
-   //}
+            return -1;
+        }
 
-   len = length;
+        width = wcwidth(wc);
 
-   result = malloc((len + 1) * sizeof(wchar_t));
+        if (width >= 0)
+        {
+            width_sum += width;
+        }
 
-   if (result == NULL)
-   {
-      puts("mallocに失敗しました。");
+        current_ptr += bytes_read;
 
-      return -1;
-   }
+        chars_processed++;
+    }
 
-   mbstowcs(result, str, len + 1);
-
-   number = 0;
-   incriment = 0;
-   back = 0;
-
-   while (len > number)
-   {
-      // wcswindthの方を使うとより良くなりそう。
-
-      incriment = wcwidth(result[number]);
-
-      if (incriment <= 0)
-      {
-         puts("動作が未定義の文字があります。");
-         //printf("%d %lc\n", incriment, result[number]);
-
-         return -1;
-      }
-
-      back += incriment - 1;
-
-      number++;
-   }
-
-   return back;
+    // 半角との差分を返すために width_sum - chars_processed を返す
+    return width_sum - chars_processed;
 }
-
-// int main(void)
-// {
-//     // テストで使用するmain関数
-//
-//     char *file_data[100];
-//
-//     file_data[0] = "#include <stdio.h>";
-//     file_data[1] = "";
-//     file_data[2] = "int main(void)";
-//     file_data[3] = "{";
-//     file_data[4] = "    char *hoge_hoge[10];";
-//     file_data[5] = "    int number;";
-//     file_data[6] = "";
-//     file_data[7] = "    hoge_hoge[0] = \"#include <stdio.h>\";";
-//     file_data[8] = "    hoge_hoge[1] = \"\";";
-//     file_data[9] = "    hoge_hoge[2] = \"int main(void)\";";
-//     file_data[10] = "    hoge_hoge[3] = \"{\";";
-//     file_data[11] = "    hoge_hoge[4] = \"    puts(\"Hello\");\";";
-//     file_data[12] = "    hoge_hoge[5] = \"    return 0;\";";
-//     file_data[13] = "    hoge_hoge[6] = \"}\";";
-//     file_data[14] = "    hoge_hoge[7] = NULL;";
-//     file_data[15] = "";
-//     file_data[16] = "    number = 0;";
-//     file_data[17] = "";
-//     file_data[18] = "    while (hoge_hoge[number] != NULL)";
-//     file_data[19] = "    {";
-//     file_data[20] = "        puts(hoge_hoge[number]);";
-//     file_data[21] = "        number++;";
-//     file_data[22] = "    }";
-//     file_data[23] = "    return 0;";
-//     file_data[24] = "}";
-//     file_data[25] = "// これはC言語初心者の脳を破壊するコードです。";
-//     file_data[26] = "// C言語初心者の皆様は、このコードをしっかり理解することで脳を破壊しましょう！私からのお願いです！";
-//     file_data[27] = "A man visiting a graveyard saw a tombstone that read:";
-//     file_data[28] = "“Here lies John Kelly, a lawyer and an honest man.”";
-//     file_data[29] = "“How about that!” he exclaimed.";
-//     file_data[30] = "“They’ve got three people buried in one grave.”";
-//
-//     file_data[31] = NULL;
-//
-//     render_screen(file_data, 31);
-//
-//     return 0;
-// }

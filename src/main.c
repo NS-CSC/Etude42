@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <locale.h>
 
 #include "config.h"
 #include "display.h"
@@ -16,6 +17,7 @@ int main(const int argc, char *argv[])
     int single_dash_option_length;
     int exit_code;
 
+    setlocale(LC_CTYPE, "ja_JP.UTF-8");
     path_arg_count = 0;
 
     if (argc == 1)
