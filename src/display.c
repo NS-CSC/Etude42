@@ -14,10 +14,12 @@ int get_digits(int number);
 // 十進数の桁数を求める関数
 void input_handler(const int indent_offset, char *file_data[], const int current_max_lines);
 // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag);
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[]);
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
+int get_char_size(const char *str, int length);
+// 表示上の文字列の長さを取得する関数
 
 void render_screen(char *file_data[], const int current_max_lines)
 {
@@ -27,6 +29,8 @@ void render_screen(char *file_data[], const int current_max_lines)
     int number;
     int indent_space;
 
+    setlocale(LC_CTYPE, "ja_JP.UTF-8");
+
     initscr();
     noecho();
     keypad(stdscr, TRUE);
@@ -34,8 +38,6 @@ void render_screen(char *file_data[], const int current_max_lines)
 
     number = 0;
     indent_space = get_digits(current_max_lines);
-
-    setlocale(LC_ALL, "ja_JP.UTF-8");
 
     while (file_data[number] != NULL)
     {
@@ -90,28 +92,28 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 if (cursor_pos_x > 0)
                 {
                     cursor_pos_x--;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data);
                 }
                 break;
             case KEY_DOWN:
                 if (cursor_pos_x < current_max_lines - 1)
                 {
                     cursor_pos_x++;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data);
                 }
                 break;
             case KEY_LEFT:
                 if (cursor_pos_y > indent_offset)
                 {
                     cursor_pos_y--;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 1);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 1, file_data);
                 }
                 break;
             case KEY_RIGHT:
                 if (cursor_pos_y < strlen_utf8(file_data[cursor_pos_x]) + indent_offset - 2)
                 {
                     cursor_pos_y++;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data);
                 }
                 break;
             case 'q':
@@ -123,7 +125,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
     return;
 }
 
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag)
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[])
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
     // これ他にも引数必要では?
@@ -153,7 +155,11 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         }
     }
 
-    move(*cursor_pos_x, *cursor_pos_y);
+    move(*cursor_pos_x, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y));
+    // こいつをなんとかする(y)
+    // *cursor_pos_yはワイド文字を含めない今の行
+    // これにマルチバイトの増加量を加算すれば勝ちでは?
+    // ただ、上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
     return;
 }
@@ -181,39 +187,57 @@ int strlen_utf8(const char *str)
     return number + 1;
 }
 
-int get_char_size(const char *str)
+int get_char_size(const char *str, int length)
 {
+   // 表示上の文字列の長さを取得する関数
+
    size_t len;
    wchar_t *result;
    int incriment;
    int number;
    int back;
 
-   len = mbstowcs(NULL, str, 0);
+   //len = mbstowcs(NULL, str, 0);
 
-   if (len == -1)
-   {
-      puts("マルチバイト文字を含めた文字数の長さを返す処理に失敗しました。");
+   //if (len == -1)
+   //{
+   //   puts("マルチバイト文字を含めた文字数の長さを返す処理に失敗しました。");
 
-      return -1;
-   }
+   //   return -1;
+   //}
 
-   result = malloc(len * sizeof(wchar_t));
+   len = length;
 
-   if (!result)
+   result = malloc((len + 1) * sizeof(wchar_t));
+
+   if (result == NULL)
    {
       puts("mallocに失敗しました。");
 
       return -1;
    }
 
-   mbstowcs(result, str, len);
+   mbstowcs(result, str, len + 1);
 
    number = 0;
+   incriment = 0;
+   back = 0;
 
-   while (incriment < result[number])
+   while (len > number)
    {
-      incriment = result[number];
+      // wcswindthの方を使うとより良くなりそう。
+
+      incriment = wcwidth(result[number]);
+
+      if (incriment <= 0)
+      {
+         puts("動作が未定義の文字があります。");
+         //printf("%d %lc\n", incriment, result[number]);
+
+         return -1;
+      }
+
+      back += incriment - 1;
 
       number++;
    }
