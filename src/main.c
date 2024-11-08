@@ -1,6 +1,6 @@
+#include <locale.h>
 #include <stdio.h>
 #include <string.h>
-#include <locale.h>
 
 #include "config.h"
 #include "display.h"
