@@ -125,9 +125,8 @@ void input_handler(const int indent_offset, char *file_data[], const int current
 void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[])
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
-    // これ他にも引数必要では?
     // 今は一マスの移動のみに対応している
-    // 大きく移動させたいときは移動したい方向を引数で渡すことにする
+    // 大きく移動させたいときは移動したい方向も引数で渡すことにする
 
     if (*cursor_pos_y > line_len - 2)
     {
@@ -146,18 +145,16 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
         else
         {
-            move(*cursor_pos_x, line_len - 2);
+            move(*cursor_pos_x, line_len - 2 + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+            
+            // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
             return;
         }
     }
 
     move(*cursor_pos_x, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
-    // オフセットが定義されていない
-    // こいつをなんとかする(y)
-    // *cursor_pos_yはワイド文字を含めない今の行
-    // これにマルチバイトの増加量を加算すれば勝ちでは?
-    // ただ、上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
+    // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
     return;
 }
@@ -188,7 +185,7 @@ int strlen_utf8(const char *str)
 int get_char_size(char *str, int length)
 {
     // 表示上の文字列の増加量を取得する関数
-    //
+
     int width_sum;
     wchar_t wc;
     int bytes_read;
@@ -201,9 +198,10 @@ int get_char_size(char *str, int length)
     chars_processed = 0;
     current_ptr = str;
 
-    // 指定された文字数(length)まで処理する
     while (chars_processed < length && *current_ptr != '\0')
     {
+        // 指定された文字数(length)まで処理する
+
         bytes_read = mbtowc(&wc, current_ptr, MB_CUR_MAX);
 
         if (bytes_read <= 0)
