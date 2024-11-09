@@ -58,4 +58,3 @@ int get_digits(int number)
 
     return answer;
 }
-
