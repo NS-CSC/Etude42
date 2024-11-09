@@ -146,7 +146,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         else
         {
             move(*cursor_pos_x, line_len - 2 + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
-            
+
             // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
             return;
