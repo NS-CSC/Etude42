@@ -7,7 +7,7 @@
 
 //#include "config.h"
 //#include "file_manager.h"
-//#include "input_handler.h"
+#include "input_handler.h"
 
 void render_screen(char *file_data[], const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数

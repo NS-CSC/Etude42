@@ -3,9 +3,9 @@
 #include <string.h>
 
 //#include "config.h"
-//#include "display.h"
+#include "display.h"
 #include "file_manager.h"
-//#include "input_handler.h"
+#include "input_handler.h"
 
 int main(const int argc, char *argv[])
 {
