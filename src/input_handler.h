@@ -15,7 +15,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
-int get_char_size(char *str, int length);
+int get_char_size(char *str, const int length);
 // 表示上の文字列の増加量を取得する関数
 
 #endif // INPUT_HANDLER_H
