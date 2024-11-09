@@ -8,13 +8,15 @@
 
 void render_screen(char *file_data[], const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
+void update_screen(char *file_data[], const int current_max_lines);
+// ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 int get_digits(int number);
 // 十進数の桁数を求める関数
 
 void render_screen(char *file_data[], const int current_max_lines)
 {
     // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
-    // 関数の中身を分割して別々に呼んでもらう形に変更する
+    // 最初に呼び出す関数ともう一度書き直すものに分割する
 
     int number;
     int indent_space;
@@ -34,9 +36,37 @@ void render_screen(char *file_data[], const int current_max_lines)
         number++;
     }
 
+    refresh();
+
     input_handler(indent_space + 1, file_data, current_max_lines);
 
     endwin();
+    // 描画を終了する
+
+    return;
+}
+
+void update_screen(char *file_data[], const int current_max_lines)
+{
+    // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
+
+    int number;
+    int indent_space;
+
+    erase();
+    // 描画した画面を削除
+
+    number = 0;
+    indent_space = get_digits(current_max_lines);
+
+    while (file_data[number] != NULL)
+    {
+        mvprintw(number, 0, "%*d %s", indent_space, number + 1, file_data[number]);
+
+        number++;
+    }
+
+    refresh();
 
     return;
 }
