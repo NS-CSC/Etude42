@@ -6,7 +6,7 @@
 #include <wchar.h>
 
 //#include "config.h"
-//#include "display.h"
+#include "display.h"
 //#include "file_manager.h"
 
 void input_handler(const int indent_offset, char *file_data[], const int current_max_lines);

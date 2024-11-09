@@ -3,7 +3,7 @@
 #include <wchar.h>
 
 //#include "config.h"
-//#include "display.h"
+#include "display.h"
 //#include "file_manager.h"
 #include "input_handler.h"
 
@@ -23,11 +23,14 @@ void input_handler(const int indent_offset, char *file_data[], const int current
 
     int cursor_pos_x;
     int cursor_pos_y;
+    int current_scroll;
 
-    cursor_pos_x = 0;
     cursor_pos_y = indent_offset;
 
     move(0, indent_offset);
+
+    cursor_pos_x = 0;
+    current_scroll = 0;
 
     while (1)
     {
@@ -63,6 +66,20 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 break;
             case 'q':
                 return;
+                break;
+            case 'j':
+                current_scroll++;
+                // 頑張って判定とる
+
+                update_screen(file_data, current_max_lines, current_scroll);
+                break;
+            case 'k':
+                if (current_scroll > 0)
+                {
+                    current_scroll--;
+                }
+
+                update_screen(file_data, current_max_lines, current_scroll);
                 break;
         }
     }
