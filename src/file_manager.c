@@ -1,10 +1,10 @@
 #include <dirent.h>
 #include <errno.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <locale.h>
 
 //#include "config.h"
 #include "display.h"
@@ -42,8 +42,9 @@ int read_file(const char *file_path)
     // mbtowc関数の返り値
     size_t getline_len;
     // getline関数の返り値
+    int free_index;
+    // メモリを解放するためのインデックス
     getline_len = 0;
-
     file_len = 500;
     content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
     // ファイルの行数を指定してメモリを確保
@@ -62,10 +63,9 @@ int read_file(const char *file_path)
     if (fp == NULL)
     {
         fprintf(stderr, "Failed to open or create file: %s\n", file_path);
-
         return -1;
     }
-    
+
     while (getline(&line, &getline_len, fp) != -1)
     {
         if (count == file_len)
@@ -77,6 +77,12 @@ int read_file(const char *file_path)
             if (content == NULL)
             {
                 fprintf(stderr, "Failed to allocate memory\n");
+                free_index = 0;
+                while (free_index < count)
+                {
+                    free(content[free_index]);
+                    free_index++;
+                }
                 free(content);
                 return -1;
             }
@@ -105,16 +111,7 @@ int read_file(const char *file_path)
         return -1;
     }
 
-    line_count = 0;
-
-    while (content[line_count] != NULL)
-    {
-        printf("%ls\n", content[line_count]);
-        line_count++;
-    }
-
-
-    //render_screen(content, count);
+    render_screen(content, count);
 
     return 0;
 }
@@ -212,13 +209,6 @@ int save_file(const char *file_path, const char *data)
         return -1;
     }
 
-    return 0;
-}
-
-int main(void)
-{
-    setlocale(LC_ALL, "ja_JP.UTF-8");
-    read_file("./main.c");
     return 0;
 }
 
