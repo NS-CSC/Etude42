@@ -11,7 +11,7 @@
 #include "file_manager.h"
 //#include "input_handler.h"
 
-#define LIMIT_LINE_LEN 10000
+#define LIMIT_LINE_LEN 20
 
 int read_file(const char *file_path);
 // ファイルのパスを引数に指定するとファイルを読み込む関数
@@ -27,15 +27,27 @@ int read_file(const char *file_path)
     // ファイルのパスを引数に指定するとファイルを読み込む関数
 
     FILE *fp;
-    wchar_t line[10000];
+    int len;
+    wchar_t line[256];
     // 読み込みバッファ
-    wchar_t *content[10000];
+    wchar_t **content;
     // ワイド文字リテラルの先頭のポインタの配列
     wchar_t *result;
     // fgetwsの戻り値を格納するための変数
     int count;
     int close_result;
     int line_count;
+
+    len = 500;
+
+    content = (wchar_t **)malloc(sizeof(wchar_t *) * len);
+
+    if (content == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory\n");
+
+        return -1;
+    }
 
     count = 0;
 
@@ -48,11 +60,29 @@ int read_file(const char *file_path)
         return -1;
     }
     
-    while ((result = fgetws(line, 10000, fp)) != NULL)
+    while ((result = fgetws(line, 256, fp)) != NULL)
     {
-        printf("%ls", result);
-        content[count] = wcsdup(result);
-        count++;
+        if (count == len)
+        {
+            len *= 2;
+            content = (wchar_t **)realloc(content, sizeof(wchar_t *) * len);
+
+            if (content == NULL)
+            {
+                fprintf(stderr, "Failed to allocate memory\n");
+                free(content);
+                return -1;
+            }
+        }
+
+        if (result != NULL)
+        {
+            content[count] = wcsdup(result);
+            count++;
+        } else
+        {
+            break;
+        }
     }
 
     close_result = fclose(fp);
@@ -65,6 +95,7 @@ int read_file(const char *file_path)
     }
 
     line_count = 0;
+    
     while (content[line_count] != NULL)
     {
         printf("%ls", content[line_count]);
