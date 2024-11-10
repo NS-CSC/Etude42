@@ -6,16 +6,16 @@
 //#include "file_manager.h"
 #include "input_handler.h"
 
-void input_handler(const int indent_offset, char *file_data[], const int current_max_lines);
+void input_handler(const int indent_offset, char *file_data[], const int current_max_lines, int window_x, int window_y);
 // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
 void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[], int *current_scroll, const int window_x, const int window_y, const int current_max_lines);
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
-int get_char_size(char *str, const int length);
+int get_display_width_increment(char *str, const int length);
 // 表示上の文字列の増加量を取得する関数
 
-void input_handler(const int indent_offset, char *file_data[], const int current_max_lines)
+void input_handler(const int indent_offset, char *file_data[], const int current_max_lines, const int window_x, const int window_y)
 {
     // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
     // 引数として行数インデントの数を持つ
@@ -23,8 +23,6 @@ void input_handler(const int indent_offset, char *file_data[], const int current
     int cursor_pos_x;
     int cursor_pos_y;
     int current_scroll;
-    int window_x;
-    int window_y;
 
     cursor_pos_y = indent_offset;
 
@@ -32,8 +30,6 @@ void input_handler(const int indent_offset, char *file_data[], const int current
 
     cursor_pos_x = 0;
     current_scroll = 0;
-
-    getmaxyx(stdscr, window_x, window_y);
 
     while (1)
     {
@@ -143,7 +139,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
                 update_screen(file_data, current_max_lines, *current_scroll);
             }
 
-            move(*cursor_pos_x - *current_scroll, line_len - 1 + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+            move(*cursor_pos_x - *current_scroll, line_len - 1 + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
             // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
             return;
@@ -170,7 +166,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         update_screen(file_data, current_max_lines, *current_scroll);
     }
 
-    move(*cursor_pos_x - *current_scroll, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+    move(*cursor_pos_x - *current_scroll, *cursor_pos_y + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
     // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
     return;
@@ -199,7 +195,7 @@ int strlen_utf8(const char *str)
     return number + 1;
 }
 
-int get_char_size(char *str, const int length)
+int get_display_width_increment(char *str, const int length)
 {
     // 表示上の文字列の増加量を取得する関数
 
