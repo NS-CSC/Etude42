@@ -46,16 +46,6 @@ int read_file(const char *file_path)
     // メモリを解放するためのインデックス
     getline_len = 0;
     file_len = 500;
-    content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
-    // ファイルの行数を指定してメモリを確保
-
-    if (content == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory\n");
-
-        return -1;
-    }
-
     count = 0;
 
     fp = get_file_pointer(file_path);
@@ -65,6 +55,17 @@ int read_file(const char *file_path)
         fprintf(stderr, "Failed to open or create file: %s\n", file_path);
         return -1;
     }
+
+    content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
+    // ファイルの行数を指定してメモリを確保
+
+    if (content == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory\n");
+        free(content);
+        return -1;
+    }
+
 
     while (getline(&line, &getline_len, fp) != -1)
     {
