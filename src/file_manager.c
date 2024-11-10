@@ -11,8 +11,6 @@
 #include "file_manager.h"
 //#include "input_handler.h"
 
-#define LIMIT_LINE_LEN 20
-
 int read_file(const char *file_path);
 // ファイルのパスを引数に指定するとファイルを読み込む関数
 FILE *get_file_pointer(const char *file_path);
@@ -27,20 +25,28 @@ int read_file(const char *file_path)
     // ファイルのパスを引数に指定するとファイルを読み込む関数
 
     FILE *fp;
-    int len;
-    wchar_t line[256];
+    int file_len;
+    // ファイルの行数
+    char *line;
     // 読み込みバッファ
+    wchar_t *w_line;
     wchar_t **content;
     // ワイド文字リテラルの先頭のポインタの配列
-    wchar_t *result;
-    // fgetwsの戻り値を格納するための変数
     int count;
+    // ファイルの行数をカウントする変数
     int close_result;
+    // ファイルをクローズする際の返り値
     int line_count;
+    // ファイルの行数をカウントする変数 printfで使う
+    int mbstows_result;
+    // mbtowc関数の返り値
+    size_t getline_len;
+    // getline関数の返り値
+    getline_len = 0;
 
-    len = 500;
-
-    content = (wchar_t **)malloc(sizeof(wchar_t *) * len);
+    file_len = 500;
+    content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
+    // ファイルの行数を指定してメモリを確保
 
     if (content == NULL)
     {
@@ -60,12 +66,13 @@ int read_file(const char *file_path)
         return -1;
     }
     
-    while ((result = fgetws(line, 256, fp)) != NULL)
+    while (getline(&line, &getline_len, fp) != -1)
     {
-        if (count == len)
+        if (count == file_len)
         {
-            len *= 2;
-            content = (wchar_t **)realloc(content, sizeof(wchar_t *) * len);
+            // 行数を超えた場合の処理 メモリを再確保する
+            file_len *= 2;
+            content = (wchar_t **)realloc(content, sizeof(wchar_t *) * file_len);
 
             if (content == NULL)
             {
@@ -75,14 +82,18 @@ int read_file(const char *file_path)
             }
         }
 
-        if (result != NULL)
+        mbstows_result = mbstowcs(NULL, line, 0) + 1;
+        w_line = (wchar_t *)malloc(sizeof(wchar_t) * mbstows_result);
+        if (w_line == NULL)
         {
-            content[count] = wcsdup(result);
-            count++;
-        } else
-        {
-            break;
+            fprintf(stderr, "Failed to allocate memory\n");
+            free(w_line);
+            return -1;
         }
+
+        mbstowcs(w_line, line, mbstows_result);
+        content[count] = w_line;
+        count++;
     }
 
     close_result = fclose(fp);
@@ -95,10 +106,10 @@ int read_file(const char *file_path)
     }
 
     line_count = 0;
-    
+
     while (content[line_count] != NULL)
     {
-        printf("%ls", content[line_count]);
+        printf("%ls\n", content[line_count]);
         line_count++;
     }
 
