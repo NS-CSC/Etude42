@@ -45,11 +45,6 @@ void render_screen(char *file_data[], const int current_max_lines)
         mvprintw(number + x_offset, 0, "%*d %s", indent_space, number + 1, file_data[number]);
 
         line_len = get_display_width(file_data[number]);
-        // あと、シンプルに下の式がおかしいかもしれない
-
-        endwin();
-        printf("%d %s\n", line_len, file_data[number]);
-        exit(0);
 
         while (line_len > window_y)
         {
@@ -125,15 +120,12 @@ int get_display_width(char *str)
     int test;
     int conversion_result;
 
-    setlocale(LC_CTYPE, "ja_JP.UTF-8");
-    //setlocale(LC_CTYPE, "");
-
     len = mbstowcs(NULL, str, 0);
 
     if (len == -1)
     {
         puts("char*をwchar_t*に変換する段階で問題が発生しました。");
-        
+
         exit(1);
     }
 
@@ -147,18 +139,17 @@ int get_display_width(char *str)
     }
 
     test = mbstowcs(wstr, str, len + 1);
- 
+
     if (test == -1)
     {
         puts("char*をwchar_t*に変換する段階で問題が発生しました。");
-        
+
         free(wstr);
 
         exit(1);
     }
 
     conversion_result = wcswidth(wstr, len);
-    // なぜか-1にすると動く
 
     if (conversion_result == -1)
     {
