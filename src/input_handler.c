@@ -1,6 +1,5 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include <wchar.h>
 
 //#include "config.h"
 #include "display.h"
@@ -9,7 +8,7 @@
 
 void input_handler(const int indent_offset, char *file_data[], const int current_max_lines);
 // 別の関数を参照すると手間がかかるため、一時的にショートカットとして使用する関数
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[], const int current_scroll);
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[], int *current_scroll, const int window_x, const int window_y, const int current_max_lines);
 // 仮想的なマウスの位置を実際の位置に移動させる関数
 int strlen_utf8(const char *str);
 // マルチバイト文字を含めた文字列の長さを返す関数
@@ -24,6 +23,8 @@ void input_handler(const int indent_offset, char *file_data[], const int current
     int cursor_pos_x;
     int cursor_pos_y;
     int current_scroll;
+    int window_x;
+    int window_y;
 
     cursor_pos_y = indent_offset;
 
@@ -31,6 +32,8 @@ void input_handler(const int indent_offset, char *file_data[], const int current
 
     cursor_pos_x = 0;
     current_scroll = 0;
+
+    getmaxyx(stdscr, window_x, window_y);
 
     while (1)
     {
@@ -40,7 +43,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 if (cursor_pos_x > 0)
                 {
                     cursor_pos_x--;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, current_scroll);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
                 }
 
                 break;
@@ -48,7 +51,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 if (cursor_pos_x < current_max_lines - 1)
                 {
                     cursor_pos_x++;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, current_scroll);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
                 }
 
                 break;
@@ -56,7 +59,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 if (cursor_pos_y > indent_offset)
                 {
                     cursor_pos_y--;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 1, file_data, current_scroll);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 1, file_data, &current_scroll, window_x, window_y, current_max_lines);
                 }
 
                 break;
@@ -64,7 +67,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 if (cursor_pos_y < strlen_utf8(file_data[cursor_pos_x]) + indent_offset - 2)
                 {
                     cursor_pos_y++;
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, current_scroll);
+                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
                 }
 
                 break;
@@ -72,30 +75,30 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 return;
 
                 break;
-            case 'j':
-                current_scroll++;
-                // いつか頑張って判定をとる
+                //case 'j':
+                //    current_scroll++;
+                //    // いつか頑張って判定をとる
 
-                update_screen(file_data, current_max_lines, current_scroll);
-                move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, current_scroll);
+                //    update_screen(file_data, current_max_lines, current_scroll);
+                //    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
 
-                break;
-            case 'k':
-                if (current_scroll > 0)
-                {
-                    current_scroll--;
-                    update_screen(file_data, current_max_lines, current_scroll);
-                    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, current_scroll);
-                }
-
-                break;
+                //    break;
+                //case 'k':
+                //    if (current_scroll > 0)
+                //    {
+                //        current_scroll--;
+                //        update_screen(file_data, current_max_lines, current_scroll);
+                //        move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
+                //    }
+                //
+                //    break;
         }
     }
 
     return;
 }
 
-void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[], const int current_scroll)
+void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, const int line_len, const unsigned short left_arrow_flag, char *file_data[], int *current_scroll, const int window_x, const int window_y, const int current_max_lines)
 {
     // 仮想的なマウスの位置を実際の位置に移動させる関数
     // 今は一マスの移動のみに対応している
@@ -118,14 +121,56 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
         else
         {
-            move(*cursor_pos_x - current_scroll, line_len - 1 + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+            // 画面外に出たらその方向に動くコードを書く
+            //if (画面縦サイズ+スクロール<=カーソル)
+            //else if (スクロール>カーソル)
+
+            if (window_x + *current_scroll <= *cursor_pos_x)
+            {
+                // カーソルが描画範囲より下に出ていたときの条件式
+
+                (*current_scroll)++;
+                // とりあえず+1
+                update_screen(file_data, current_max_lines, *current_scroll);
+            }
+
+            else if (*current_scroll >= *cursor_pos_x)
+            {
+                // カーソルが描画範囲より上に出ていたときの条件式
+
+                (*current_scroll)--;
+                // とりあえず-1
+                update_screen(file_data, current_max_lines, *current_scroll);
+            }
+
+            move(*cursor_pos_x - *current_scroll, line_len - 1 + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
             // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
             return;
         }
     }
 
-    move(*cursor_pos_x - current_scroll, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+    // 画面外に出たらその方向に動くコードを書く
+
+    if (window_x + *current_scroll <= *cursor_pos_x)
+    {
+        // カーソルが描画範囲より下に出ていたときの条件式
+
+        (*current_scroll)++;
+        // とりあえず+1
+        update_screen(file_data, current_max_lines, *current_scroll);
+    }
+
+    else if (*current_scroll > *cursor_pos_x)
+    {
+        // カーソルが描画範囲より上に出ていたときの条件式
+
+        (*current_scroll)--;
+        // とりあえず-1
+        update_screen(file_data, current_max_lines, *current_scroll);
+    }
+
+    move(*cursor_pos_x - *current_scroll, *cursor_pos_y + get_char_size(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
     // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
     return;
