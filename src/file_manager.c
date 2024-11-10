@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
+#include <locale.h>
 
 //#include "config.h"
 #include "display.h"
@@ -25,18 +27,16 @@ int read_file(const char *file_path)
     // ファイルのパスを引数に指定するとファイルを読み込む関数
 
     FILE *fp;
-    char *line;
-    // getline用のバッファ
-    char *content[LIMIT_LINE_LEN];
-    // とりえず10000行読み込める
-    size_t len;
-    ssize_t read;
+    wchar_t line[10000];
+    // 読み込みバッファ
+    wchar_t *content[10000];
+    // ワイド文字リテラルの先頭のポインタの配列
+    wchar_t *result;
+    // fgetwsの戻り値を格納するための変数
     int count;
     int close_result;
     int line_count;
 
-    line = NULL;
-    len = 0;
     count = 0;
 
     fp = get_file_pointer(file_path);
@@ -47,15 +47,13 @@ int read_file(const char *file_path)
 
         return -1;
     }
-
-    while ((read = getline(&line, &len, fp)) != -1)
+    
+    while ((result = fgetws(line, 10000, fp)) != NULL)
     {
-        content[count] = strdup(line);
-
+        printf("%ls", result);
+        content[count] = wcsdup(result);
         count++;
     }
-
-    free(line);
 
     close_result = fclose(fp);
 
@@ -67,8 +65,14 @@ int read_file(const char *file_path)
     }
 
     line_count = 0;
+    while (content[line_count] != NULL)
+    {
+        printf("%ls", content[line_count]);
+        line_count++;
+    }
 
-    render_screen(content, count);
+
+    //render_screen(content, count);
 
     return 0;
 }
@@ -166,6 +170,13 @@ int save_file(const char *file_path, const char *data)
         return -1;
     }
 
+    return 0;
+}
+
+int main(void)
+{
+    setlocale(LC_ALL, "ja_JP.UTF-8");
+    read_file("./main.c");
     return 0;
 }
 
