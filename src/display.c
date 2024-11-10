@@ -60,20 +60,14 @@ void update_screen(char *file_data[], const int current_max_lines, const int cur
     number = 0;
     indent_space = get_digits(current_max_lines);
 
-    while (file_data[number + current_scroll + 5] != NULL)
+    while (number + current_scroll < current_max_lines)
     {
-        // +4以上にしないと謎に終了する
-        // どうやらNULLの位置が違うらしい?
-        // あと、実際の長さに合わせるには、+5の方がいい。
+        // ここの条件式をNULLで取るとバグるので注意が必要
 
         mvprintw(number, 0, "%*d %s", indent_space, number + 1 + current_scroll, file_data[number + current_scroll]);
-        // number + current_scrollがダメらしい!?!?
 
         number++;
     }
-
-    printw("\n%d %d\n", number, current_scroll);
-    // なんで+4以上にしないと終了するのかわからないので、そのデバッグ
 
     refresh();
 
