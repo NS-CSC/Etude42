@@ -75,23 +75,23 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 return;
 
                 break;
-            //case 'j':
-            //    current_scroll++;
-            //    // いつか頑張って判定をとる
-
-            //    update_screen(file_data, current_max_lines, current_scroll);
-            //    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
-
-            //    break;
-            //case 'k':
-            //    if (current_scroll > 0)
-            //    {
-            //        current_scroll--;
-            //        update_screen(file_data, current_max_lines, current_scroll);
-            //        move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
-            //    }
-            //
-            //    break;
+                //case 'j':
+                //    current_scroll++;
+                //    // いつか頑張って判定をとる
+    
+                //    update_screen(file_data, current_max_lines, current_scroll);
+                //    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
+    
+                //    break;
+                //case 'k':
+                //    if (current_scroll > 0)
+                //    {
+                //        current_scroll--;
+                //        update_screen(file_data, current_max_lines, current_scroll);
+                //        move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
+                //    }
+                //
+                //    break;
         }
     }
 
@@ -122,15 +122,8 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         else
         {
             // 画面外に出たらその方向に動くコードを書く
-            //if (画面縦サイズ+スクロール<=カーソル) 
-            // 画面移動(カーソル-画面縦サイズ+スクロール)
-            //else if (スクロール=>カーソル)
-            // 画面移動(スクロール-カーソル)
-            //else 
-
-            // endwin();
-            // printf("%d %d\n", window_x, window_y);
-            // exit(0);
+            //if (画面縦サイズ+スクロール<=カーソル)
+            //else if (スクロール>カーソル)
 
             if (window_x + *current_scroll <= *cursor_pos_x)
             {
