@@ -32,6 +32,8 @@ int read_file(const char *file_path)
     wchar_t *w_line;
     wchar_t **content;
     // ワイド文字リテラルの先頭のポインタの配列
+    wchar_t **tmp;
+    // reallocで使う一時的なポインタ
     int count;
     // ファイルの行数をカウントする変数
     int close_result;
@@ -66,16 +68,15 @@ int read_file(const char *file_path)
         return -1;
     }
 
-
     while (getline(&line, &getline_len, fp) != -1)
     {
         if (count == file_len)
         {
             // 行数を超えた場合の処理 メモリを再確保する
             file_len *= 2;
-            content = (wchar_t **)realloc(content, sizeof(wchar_t *) * file_len);
+            tmp = (wchar_t **)realloc(content, sizeof(wchar_t *) * file_len);
 
-            if (content == NULL)
+            if (tmp == NULL)
             {
                 fprintf(stderr, "Failed to allocate memory\n");
                 free_index = 0;
@@ -85,8 +86,11 @@ int read_file(const char *file_path)
                     free_index++;
                 }
                 free(content);
+                free(tmp);
                 return -1;
             }
+
+            content = tmp;
         }
 
         mbstows_result = mbstowcs(NULL, line, 0) + 1;
