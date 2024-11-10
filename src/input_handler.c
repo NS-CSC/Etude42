@@ -78,10 +78,10 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 //case 'j':
                 //    current_scroll++;
                 //    // いつか頑張って判定をとる
-    
+
                 //    update_screen(file_data, current_max_lines, current_scroll);
                 //    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
-    
+
                 //    break;
                 //case 'k':
                 //    if (current_scroll > 0)
