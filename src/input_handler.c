@@ -75,7 +75,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 //    current_scroll++;
                 //    // いつか頑張って判定をとる
 
-                //    update_screen(file_data, current_max_lines, current_scroll);
+                //    update_screen(file_data, current_max_lines, current_scroll, window_x, window_y);
                 //    move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
 
                 //    break;
@@ -83,7 +83,7 @@ void input_handler(const int indent_offset, char *file_data[], const int current
                 //    if (current_scroll > 0)
                 //    {
                 //        current_scroll--;
-                //        update_screen(file_data, current_max_lines, current_scroll);
+                //        update_screen(file_data, current_max_lines, current_scroll, window_x, window_y);
                 //        move_mouse(&cursor_pos_x, &cursor_pos_y, indent_offset, strlen_utf8(file_data[cursor_pos_x]) + indent_offset, 0, file_data, &current_scroll, window_x, window_y, current_max_lines);
                 //    }
                 //
@@ -127,7 +127,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
                 (*current_scroll)++;
                 // とりあえず+1
-                update_screen(file_data, current_max_lines, *current_scroll);
+                update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
             }
 
             else if (*current_scroll >= *cursor_pos_x)
@@ -136,7 +136,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
                 (*current_scroll)--;
                 // とりあえず-1
-                update_screen(file_data, current_max_lines, *current_scroll);
+                update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
             }
 
             move(*cursor_pos_x - *current_scroll, line_len - 1 + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
@@ -154,7 +154,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
         (*current_scroll)++;
         // とりあえず+1
-        update_screen(file_data, current_max_lines, *current_scroll);
+        update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
     }
 
     else if (*current_scroll > *cursor_pos_x)
@@ -163,7 +163,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
         (*current_scroll)--;
         // とりあえず-1
-        update_screen(file_data, current_max_lines, *current_scroll);
+        update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
     }
 
     move(*cursor_pos_x - *current_scroll, *cursor_pos_y + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
