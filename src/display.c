@@ -9,7 +9,7 @@
 
 void render_screen(char *file_data[], const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
-void update_screen(char *file_data[], const int current_max_lines, const int current_scroll);
+void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 int get_digits(int number);
 // 十進数の桁数を求める関数
@@ -43,7 +43,7 @@ void render_screen(char *file_data[], const int current_max_lines)
     {
         mvprintw(number + x_offset, 0, "%*d %s", indent_space, number + 1, file_data[number]);
 
-        line_len = get_display_width(file_data[number]);
+        line_len = get_display_width(file_data[number]) + indent_space + 1;
 
         while (line_len > window_y)
         {
@@ -65,24 +65,34 @@ void render_screen(char *file_data[], const int current_max_lines)
     return;
 }
 
-void update_screen(char *file_data[], const int current_max_lines, const int current_scroll)
+void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y)
 {
     // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 
     int number;
     int indent_space;
+    int x_offset;
+    int line_len;
 
     erase();
     // 描画した画面を削除
 
     number = 0;
     indent_space = get_digits(current_max_lines);
+    x_offset = 0;
 
     while (number + current_scroll < current_max_lines)
     {
-        // ここの条件式をNULLで取るとバグるので注意が必要
+        mvprintw(number + x_offset, 0, "%*d %s", indent_space, number + 1 + current_scroll, file_data[number + current_scroll]);
 
-        mvprintw(number, 0, "%*d %s", indent_space, number + 1 + current_scroll, file_data[number + current_scroll]);
+        line_len = get_display_width(file_data[number + current_scroll]) + indent_space + 1;
+
+        while (line_len > window_y)
+        {
+            line_len -= window_y;
+
+            x_offset++;
+        }
 
         number++;
     }
@@ -118,6 +128,8 @@ int get_display_width(char *str)
     wchar_t *wstr;
     int test;
     int conversion_result;
+    int i;
+    int char_width;
 
     len = mbstowcs(NULL, str, 0);
 
@@ -148,15 +160,21 @@ int get_display_width(char *str)
         exit(1);
     }
 
-    conversion_result = wcswidth(wstr, len);
+    i = 0;
+    conversion_result = 0;
 
-    if (conversion_result == -1)
+    while (i < len)
     {
-        puts("wchar_t*の表示上の幅を算出する段階で問題が発生しました。");
+        char_width = wcwidth(wstr[i]);
 
-        free(wstr);
+        if (char_width == -1)
+        {
+            char_width = 0;
+        }
 
-        exit(1);
+        conversion_result += char_width;
+
+        i++;
     }
 
     free(wstr);
