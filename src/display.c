@@ -176,7 +176,7 @@ int get_display_width(char *str)
 
         i++;
     }
-    
+
     free(wstr);
 
     return conversion_result;
