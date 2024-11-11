@@ -100,6 +100,10 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
     // 今は一マスの移動のみに対応している
     // 大きく移動させたいときは移動したい方向も引数で渡すことにする
 
+    int i;
+    int display_line_len;
+    int x_offset;
+
     if (*cursor_pos_y > line_len - 2)
     {
         if (left_arrow_flag == 1)
@@ -139,7 +143,34 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
                 update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
             }
 
-            move(*cursor_pos_x - *current_scroll, line_len - 1 + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+            // 描画範囲からその行までのオフセットを算出して増加量として増やす
+
+            // i = 画面スクロール
+            // 画面スクロール + カーソルのx > iの間繰り返す
+            //     while()
+            //     file_data[参照行]の表示上の長さを取る
+            //     画面yサイズを長さから引く
+            //     x_offset++;
+            // i++;
+
+            i = *current_scroll;
+            x_offset = 0;
+
+            while (*current_scroll + *cursor_pos_x > i)
+            {
+                display_line_len = get_display_width(file_data[*cursor_pos_x]) + indent_offset;
+
+                while (display_line_len > window_y)
+                {
+                    display_line_len -= window_y;
+
+                    x_offset++;
+                }
+
+                i++;
+            }
+
+            move(*cursor_pos_x - *current_scroll + x_offset, line_len - 1 + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
             // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
             return;
@@ -166,7 +197,24 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
     }
 
-    move(*cursor_pos_x - *current_scroll, *cursor_pos_y + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
+    i = *current_scroll;
+    x_offset = 0;
+
+    while (*current_scroll + *cursor_pos_x > i)
+    {
+        display_line_len = get_display_width(file_data[*cursor_pos_x]) + indent_offset;
+
+        while (display_line_len > window_y)
+        {
+            display_line_len -= window_y;
+
+            x_offset++;
+        }
+
+        i++;
+    }
+
+    move(*cursor_pos_x - *current_scroll + x_offset, *cursor_pos_y + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
     // 上下に移動した時、位置が合わない問題が発生するので、これに対処する必要がある。
 
     return;
