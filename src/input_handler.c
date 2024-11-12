@@ -179,7 +179,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
             // オフセットを含めた最後の行を取得して、それからポインタの範囲をとる
             // if x_オフセットを含めた最後の行<=カーソルのx
             //     while 描画範囲内の一番上のx(x_オフセットより小さくはならない)<カーソルのx
-            //         それぞれの行のオフセットを取得し、そう和を代入する
+            //         それぞれの行のオフセットを取得し、総和を代入する
 
             if (window_x + *current_scroll - x_offset <= *cursor_pos_x)
             {
