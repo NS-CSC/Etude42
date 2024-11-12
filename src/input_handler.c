@@ -236,7 +236,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
     if (window_x + *current_scroll - x_offset <= *cursor_pos_x)
     {
         // カーソルが描画範囲より下に出ていたときの条件式
-   
+
         //current_scroll = window_x * *current_scroll - x_offset + current_scroll;
         (*current_scroll)++;
         // とりあえず+1
