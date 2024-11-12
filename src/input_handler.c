@@ -103,6 +103,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
     int i;
     int display_line_len;
     int x_offset;
+    int x_display_offset;
 
     if (*cursor_pos_y > line_len - 2)
     {
@@ -171,6 +172,14 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
                 i++;
             }
+
+            x_display_offset = 0;
+
+            // 初期の表示最終行から-1して
+            // オフセットを含めた最後の行を取得して、それからポインタの範囲をとる
+            // if x_オフセットを含めた最後の行<=カーソルのx
+            //     while 描画範囲内の一番上のx(x_オフセットより小さくはならない)<カーソルのx
+            //         それぞれの行のオフセットを取得し、そう和を代入する
 
             if (window_x + *current_scroll - x_offset <= *cursor_pos_x)
             {
