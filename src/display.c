@@ -9,7 +9,7 @@
 
 void render_screen(char *file_data[], const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
-void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y);
+void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y, int x_display_offset);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 int get_digits(int number);
 // 十進数の桁数を求める関数
@@ -65,7 +65,7 @@ void render_screen(char *file_data[], const int current_max_lines)
     return;
 }
 
-void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y)
+void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y, int x_display_offset)
 {
     // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 
@@ -83,7 +83,8 @@ void update_screen(char *file_data[], const int current_max_lines, const int cur
 
     while (number + current_scroll < current_max_lines)
     {
-        mvprintw(number + x_offset, 0, "%*d %s", indent_space, number + 1 + current_scroll, file_data[number + current_scroll]);
+        mvprintw(number + x_offset - x_display_offset, 0, "%*d %s", indent_space, number + 1 + current_scroll, file_data[number + current_scroll]);
+        // x_display_offsetはまだバグがあるので、ここを修正する。
 
         line_len = get_display_width(file_data[number + current_scroll]) + indent_space + 1;
 
