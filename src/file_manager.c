@@ -86,13 +86,21 @@ int load_config_file(const char *file_path)
     int default_len;
     int count;
     int free_index;
+    int close_result;
 
-    fp = get_file_pointer(file_path);
     line = NULL;
     len = 0;
     default_len = 10;
     count = 0;
     free_index = 0;
+
+    fp = get_file_pointer(file_path);
+
+    if (fp == NULL)
+    {
+        fprintf(stderr, "%s", strerror(errno));
+        return -1;
+    }
 
     content = (char **)malloc(sizeof(char *) * default_len);
 
@@ -100,12 +108,6 @@ int load_config_file(const char *file_path)
     {
         fprintf(stderr, "%s", strerror(errno));
         free(content);
-        return -1;
-    }
-
-    if (fp == NULL)
-    {
-        fprintf(stderr, "%s", strerror(errno));
         return -1;
     }
 
@@ -137,6 +139,13 @@ int load_config_file(const char *file_path)
         count++;
     }
 
+    close_result = fclose(fp);
+
+    if (close_result != 0)
+    {
+        fprintf(stderr, "%s", strerror(errno));
+        return -1;
+    }
     return 0;
 }
 
