@@ -99,6 +99,7 @@ int load_config_file(const char *file_path)
     if (content == NULL)
     {
         fprintf(stderr, "%s", strerror(errno));
+        free(content);
         return -1;
     }
 
