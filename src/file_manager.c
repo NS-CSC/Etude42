@@ -96,13 +96,13 @@ int load_config_file(const char *file_path)
 
     content = (char **)malloc(sizeof(char *) * default_len);
 
-    if (fp == NULL)
+    if (content == NULL)
     {
         fprintf(stderr, "%s", strerror(errno));
         return -1;
     }
 
-    if (content == NULL)
+    if (fp == NULL)
     {
         fprintf(stderr, "%s", strerror(errno));
         return -1;
