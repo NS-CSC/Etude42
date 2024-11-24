@@ -8,20 +8,20 @@
 //#include "file_manager.h"
 #include "input_handler.h"
 
-void render_screen(char *file_data[], const int current_max_lines);
+void render_screen(wchar_t **file_data, const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
 void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y, const unsigned short axis_flag, char **display_data);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
+void init();
+// ncursesの初期設定をまとめた関数
 int get_digits(int number);
 // 十進数の桁数を求める関数
 int get_display_width(char *str);
 // 画面上の表示幅を取得する関数
-void get_display_data(char **display_data, char **file_data, int indent_offset, int window_y, int current_max_lines);
 
-void render_screen(char *file_data[], const int current_max_lines)
+void render_screen(wchar_t **file_data, const int current_max_lines)
 {
     // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
-    // 最初に呼び出す関数ともう一度書き直すものに分割する
     // ディスプレイサイズによる描画の範囲（下限）が書いていないため、対応させる必要がある。
 
     int number;
@@ -32,54 +32,31 @@ void render_screen(char *file_data[], const int current_max_lines)
     int window_y;
     char **display_data;
 
-    initscr();
-    noecho();
-    keypad(stdscr, TRUE);
+    init();
+
     getmaxyx(stdscr, window_x, window_y);
-    // ncursesの初期設定
+
+
+    // ここで表示用のデータに変換する
     
-    *display_data = malloc(10000);
-
-    get_display_data(display_data, file_data, indent_space + 1, window_y, current_max_lines);
-
-    endwin();
-    for (int i = 0; i < 60; i++)
-    {
-        puts(display_data[i]);
-    }
-    exit(0);
-
     number = 0;
     indent_space = get_digits(current_max_lines);
     x_offset = 0;
 
     while (number < window_x)
     {
-        //mvprintw(number + x_offset, 0, "%*d %s", indent_space, number + 1, file_data[number]);
-        mvprintw(number, 0, "%*d %s", indent_space, number + 1, display_data[number]);
-
-        //line_len = get_display_width(file_data[number]) + indent_space + 1;
-
-        //endwin();
-        //puts(display_data[0]);
-        //exit(0);
-
-        //while (line_len > window_y)
-        //{
-        //    line_len -= window_y;
-
-        //    x_offset++;
-        //}
+        mvprintw(number, 0, "%*d %ls", indent_space, number + 1, file_data[number]);
 
         number++;
     }
 
     refresh();
 
-    input_handler(indent_space + 1, file_data, current_max_lines, window_x, window_y);
+    //input_handler(indent_space + 1, file_data, current_max_lines, window_x, window_y);
+
+    getch();
 
     endwin();
-    // 描画を終了する
 
     return;
 }
@@ -119,6 +96,19 @@ void update_screen(char *file_data[], const int current_max_lines, const int cur
     }
 
     refresh();
+
+    return;
+}
+
+void init()
+{
+    // ncursesの初期設定をまとめた関数
+
+    initscr();
+    noecho();
+    keypad(stdscr, TRUE);
+    idlok(stdscr, FALSE);
+    scrollok(stdscr, FALSE);
 
     return;
 }
@@ -201,76 +191,4 @@ int get_display_width(char *str)
     free(wstr);
 
     return conversion_result;
-}
-
-void get_display_data(char **display_data, char **file_data, int indent_offset, int window_y, int current_max_lines)
-{
-    int index_data;
-    int display_offset;
-    int display_offset1;
-    int line;
-    int max_length;
-    int i;
-
-    index_data = 0;
-    display_offset = 0;
-    line = 0;
-
-    while (index_data < current_max_lines)
-    {
-        display_offset1 = 0;
-
-        //if (index_data == 1)
-        //{
-        //    endwin();
-        //    puts(file_data[index_data + 1]);
-        //    break;
-        //}
-
-        line = get_display_width(file_data[index_data]);
-
-        //if (index_data == 2) break;
-
-        if (line <= window_y - indent_offset)
-        {
-            //strcpy(display_data[index_data + display_offset], file_data[index_data]);
-            display_data[index_data + display_offset] = file_data[index_data];
-
-            index_data++;
-
-            continue;
-        }
-
-        do
-        {
-            max_length = window_y - indent_offset;
-
-            display_data[index_data + display_offset] = (char *)malloc(max_length + 1);
-
-            if (display_data[index_data + display_offset] == 0)
-            {
-                exit(1);
-            }
-
-            i = 0;
-
-            while (i < max_length)
-            {
-                display_data[index_data + display_offset][i] = file_data[index_data][(window_y - indent_offset) * display_offset1 + i];
-
-                i++;
-            }
-
-            display_data[index_data + display_offset][max_length] = '\0';
-
-            line -= max_length;
-
-            display_offset++;
-            display_offset1++;
-        } while (line > window_y - indent_offset);
-
-        index_data++;
-    }
-
-    return;
 }
