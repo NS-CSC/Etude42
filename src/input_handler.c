@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <stdlib.h>
+#include <string.h>
 
 //#include "config.h"
 #include "display.h"
@@ -103,6 +104,18 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
     int i;
     int display_line_len;
     int x_offset;
+    int index_data;
+    int display_offset;
+    int line;
+    char **display_data;
+
+    *display_data = malloc(10000);
+
+    get_display_data(display_data, file_data, indent_offset, window_y, current_max_lines);
+
+    index_data = 0;
+    display_offset = 0;
+
 
     if (*cursor_pos_y > line_len - 2)
     {
@@ -121,40 +134,6 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
         else
         {
-            // 画面外に出たらその方向に動くコードを書く
-            //if (画面縦サイズ+スクロール<=カーソル)
-            //else if (スクロール>カーソル)
-
-            //if (window_x + *current_scroll - x_offset <= *cursor_pos_x)
-            //{
-            //    // カーソルが描画範囲より下に出ていたときの条件式
-
-            //    (*current_scroll)++;
-            //    // とりあえず+1
-            //    update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
-            //}
-
-            //else if (*current_scroll >= *cursor_pos_x)
-            //{
-            //    // カーソルが描画範囲より上に出ていたときの条件式
-
-            //    (*current_scroll)--;
-            //    // とりあえず-1
-            //    update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
-            //}
-
-            // 描画範囲からその行までのオフセットを算出して増加量として増やす
-
-            // i = 画面スクロール
-            // 画面スクロール + カーソルのx > iの間繰り返す
-            //     while()
-            //     file_data[参照行]の表示上の長さを取る
-            //     画面yサイズを長さから引く
-            //     x_offset++;
-            // i++;
-            //
-            // その行から上のオフセットをx_offsetに代入
-
             i = *current_scroll;
             x_offset = 0;
 
@@ -172,6 +151,16 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
                 i++;
             }
 
+            // 初期の表示最終行から-1して
+            // オフセットを含めた最後の行を取得して、それからポインタの範囲をとる
+            // if x_オフセットを含めた最後の行<=カーソルのx
+            //     while 描画範囲内の一番上のx(x_オフセットより小さくはならない)<カーソルのx
+            //         それぞれの行のオフセットを取得し、総和を代入する
+
+            // ↑行合わせを上と下に変更する
+            // 上合わせと下合わせをunsigned short intで管理する
+            // 下合わせは0で上合わせは1
+
             if (window_x + *current_scroll - x_offset <= *cursor_pos_x)
             {
                 // カーソルが描画範囲より下に出ていたときの条件式
@@ -179,7 +168,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
                 current_scroll = window_x * *current_scroll - x_offset + current_scroll;
                 //(*current_scroll)++;
                 // とりあえず+1
-                update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, x_offset);
+                update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, 0, display_data);
             }
 
             else if (*current_scroll >= *cursor_pos_x)
@@ -188,7 +177,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
                 (*current_scroll)--;
                 // とりあえず-1
-                update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, x_offset);
+                update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, 1, display_data);
             }
 
             move(*cursor_pos_x - *current_scroll + x_offset, line_len - 1 + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
@@ -197,24 +186,6 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
             return;
         }
     }
-
-    //if (window_x + *current_scroll <= *cursor_pos_x)
-    //{
-    //    // カーソルが描画範囲より下に出ていたときの条件式
-
-    //    (*current_scroll)++;
-    //    // とりあえず+1
-    //    update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
-    //}
-
-    //else if (*current_scroll > *cursor_pos_x)
-    //{
-    //    // カーソルが描画範囲より上に出ていたときの条件式
-
-    //    (*current_scroll)--;
-    //    // とりあえず-1
-    //    update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y);
-    //}
 
     i = *current_scroll;
     x_offset = 0;
@@ -240,7 +211,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
         //current_scroll = window_x * *current_scroll - x_offset + current_scroll;
         (*current_scroll)++;
         // とりあえず+1
-        update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, x_offset);
+        update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, 0, display_data);
     }
 
     else if (*current_scroll > *cursor_pos_x)
@@ -249,7 +220,7 @@ void move_mouse(int *cursor_pos_x, int *cursor_pos_y, const int indent_offset, c
 
         (*current_scroll)--;
         // とりあえず-1
-        update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, x_offset);
+        update_screen(file_data, current_max_lines, *current_scroll, window_x, window_y, 1, display_data);
     }
 
     move(*cursor_pos_x - *current_scroll + x_offset, *cursor_pos_y + get_display_width_increment(file_data[*cursor_pos_x], *cursor_pos_y - indent_offset));
