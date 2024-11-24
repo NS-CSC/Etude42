@@ -3,13 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 
 //#include "config.h"
 #include "display.h"
 #include "file_manager.h"
 //#include "input_handler.h"
-
-#define LIMIT_LINE_LEN 10000
 
 int read_file(const char *file_path);
 // ファイルのパスを引数に指定するとファイルを読み込む関数
@@ -25,18 +24,29 @@ int read_file(const char *file_path)
     // ファイルのパスを引数に指定するとファイルを読み込む関数
 
     FILE *fp;
+    int file_len;
+    // ファイルの行数
     char *line;
-    // getline用のバッファ
-    char *content[LIMIT_LINE_LEN];
-    // とりえず10000行読み込める
-    size_t len;
-    ssize_t read;
+    // 読み込みバッファ
+    wchar_t *w_line;
+    wchar_t **content;
+    // ワイド文字リテラルの先頭のポインタの配列
+    wchar_t **tmp;
+    // reallocで使う一時的なポインタ
     int count;
+    // ファイルの行数をカウントする変数
     int close_result;
+    // ファイルをクローズする際の返り値
     int line_count;
-
-    line = NULL;
-    len = 0;
+    // ファイルの行数をカウントする変数 printfで使う
+    int mbstows_result;
+    // mbtowc関数の返り値
+    size_t getline_len;
+    // getline関数の返り値
+    int free_index;
+    // メモリを解放するためのインデックス
+    getline_len = 0;
+    file_len = 500;
     count = 0;
 
     fp = get_file_pointer(file_path);
@@ -44,18 +54,57 @@ int read_file(const char *file_path)
     if (fp == NULL)
     {
         fprintf(stderr, "Failed to open or create file: %s\n", file_path);
-
         return -1;
     }
 
-    while ((read = getline(&line, &len, fp)) != -1)
-    {
-        content[count] = strdup(line);
+    content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
+    // ファイルの行数を指定してメモリを確保
 
-        count++;
+    if (content == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory\n");
+        free(content);
+        return -1;
     }
 
-    free(line);
+    while (getline(&line, &getline_len, fp) != -1)
+    {
+        if (count == file_len)
+        {
+            // 行数を超えた場合の処理 メモリを再確保する
+            file_len *= 2;
+            tmp = (wchar_t **)realloc(content, sizeof(wchar_t *) * file_len);
+
+            if (tmp == NULL)
+            {
+                fprintf(stderr, "Failed to allocate memory\n");
+                free_index = 0;
+                while (free_index < count)
+                {
+                    free(content[free_index]);
+                    free_index++;
+                }
+                free(content);
+                free(tmp);
+                return -1;
+            }
+
+            content = tmp;
+        }
+
+        mbstows_result = mbstowcs(NULL, line, 0) + 1;
+        w_line = (wchar_t *)malloc(sizeof(wchar_t) * mbstows_result);
+        if (w_line == NULL)
+        {
+            fprintf(stderr, "Failed to allocate memory\n");
+            free(w_line);
+            return -1;
+        }
+
+        mbstowcs(w_line, line, mbstows_result);
+        content[count] = w_line;
+        count++;
+    }
 
     close_result = fclose(fp);
 
@@ -65,8 +114,6 @@ int read_file(const char *file_path)
 
         return -1;
     }
-
-    line_count = 0;
 
     render_screen(content, count);
 
