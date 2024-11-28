@@ -20,5 +20,7 @@ int save_file(const char *file_path, const char *data);
 // ファイルをセーブする関数
 DIR *get_directory_pointer(const char *directory_path);
 // 指定された一番上のディレクトリのポインタを返す関数
+int load_config_file(const char *file_path);
+// 設定ファイルを読み込む関数
 
 #endif // FILE_MANAGER_H

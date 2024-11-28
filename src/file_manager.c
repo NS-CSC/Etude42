@@ -18,6 +18,8 @@ int save_file(const char *file_path, const char *data);
 // ファイルをセーブする関数
 DIR *get_directory_pointer(const char *directory_path);
 // 指定された一番上のディレクトリのポインタを返す関数
+int load_config_file(const char *file_path);
+// 設定ファイルを読み込む関数
 
 int read_file(const char *file_path)
 {
@@ -117,6 +119,79 @@ int read_file(const char *file_path)
 
     render_screen(content, count);
 
+    return 0;
+}
+
+int load_config_file(const char *file_path)
+{
+    FILE *fp;
+    char *line;
+    size_t len;
+    char **content;
+    char **tmp;
+    int default_len;
+    int count;
+    int free_index;
+    int close_result;
+
+    line = NULL;
+    len = 0;
+    default_len = 10;
+    count = 0;
+    free_index = 0;
+
+    fp = get_file_pointer(file_path);
+
+    if (fp == NULL)
+    {
+        fprintf(stderr, "%s", strerror(errno));
+        return -1;
+    }
+
+    content = (char **)malloc(sizeof(char *) * default_len);
+
+    if (content == NULL)
+    {
+        fprintf(stderr, "%s", strerror(errno));
+        free(content);
+        return -1;
+    }
+
+    while (getline(&line, &len, fp) != -1)
+    {
+        if (count == default_len)
+        {
+            default_len *= 2;
+            tmp = (char **)realloc(content, sizeof(char *) * default_len);
+
+            if (tmp == NULL)
+            {
+                fprintf(stderr, "Failed to allocate memory\n");
+                free_index = 0;
+                while (free_index < count)
+                {
+                    free(content[free_index]);
+                    free_index++;
+                }
+                free(content);
+                free(tmp);
+                return -1;
+            }
+
+            content = tmp;
+        }
+
+        content[count] = strdup(line);
+        count++;
+    }
+
+    close_result = fclose(fp);
+
+    if (close_result != 0)
+    {
+        fprintf(stderr, "%s", strerror(errno));
+        return -1;
+    }
     return 0;
 }
 
