@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Build output
+/build/
+
+# CMake generated files (in case of out-of-tree builds elsewhere)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+CTestTestfile.cmake

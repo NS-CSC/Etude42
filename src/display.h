@@ -5,20 +5,17 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-//#include "config.h"
-//#include "file_manager.h"
-#include "input_handler.h"
-
 void render_screen(wchar_t **file_data, const int current_max_lines);
 // ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
-void update_screen(char *file_data[], const int current_max_lines, const int current_scroll, const int window_x, const int window_y, const unsigned short axis_flag, char **display_data);
-// ファイルの中身をポインタ配列で渡すとそれを画面に表示する関数
+void update_screen(wchar_t **display_lines, int display_line_count, const int *display_orig, const int *display_offsets, int current_scroll, int window_y, int indent_offset, const int *line_in_block, wchar_t **file_data);
+// 表示用の行データを画面に描画する関数
 void init();
 // ncursesの初期設定をまとめた関数
 int get_digits(int number);
 // 十進数の桁数を求める関数
 int get_display_width(char *str);
 // 画面上の表示幅を取得する関数
-void get_display_data(char **str1, char **str2, int indent_offset, int window_y, int current_max_lines);
+wchar_t **get_display_str(wchar_t **file_data, int str_max_index, int window_x, int *display_str_max_index, int **display_orig, int **display_offsets);
+int wchar_string_display_width(wchar_t *str);
 
 #endif // DISPLAY_H
