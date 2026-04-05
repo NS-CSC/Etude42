@@ -56,7 +56,16 @@ int read_file(const char *file_path)
     if (fp == NULL)
     {
         fprintf(stderr, "Failed to open or create file: %s\n", file_path);
+        return -1;
+    }
 
+    content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
+    // ファイルの行数を指定してメモリを確保
+
+    if (content == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory\n");
+        free(content);
         return -1;
     }
 
@@ -130,8 +139,6 @@ int read_file(const char *file_path)
         content[count] = w_line;
         count++;
     }
-
-    free(line);
 
     close_result = fclose(fp);
 
