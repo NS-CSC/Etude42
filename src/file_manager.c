@@ -39,12 +39,14 @@ int read_file(const char *file_path)
     // ファイルをクローズする際の返り値
     int line_count;
     // ファイルの行数をカウントする変数 printfで使う
+
     int mbstows_result;
     // mbtowc関数の返り値
     size_t getline_len;
     // getline関数の返り値
     int free_index;
     // メモリを解放するためのインデックス
+
     getline_len = 0;
     file_len = 500;
     count = 0;
@@ -67,6 +69,19 @@ int read_file(const char *file_path)
         return -1;
     }
 
+    content = (wchar_t **)malloc(sizeof(wchar_t *) * file_len);
+    // ファイルの行数を指定してメモリを確保
+
+    if (content == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory\n");
+        free(content);
+
+        return -1;
+    }
+
+    line = NULL;
+
     while (getline(&line, &getline_len, fp) != -1)
     {
         if (count == file_len)
@@ -79,13 +94,17 @@ int read_file(const char *file_path)
             {
                 fprintf(stderr, "Failed to allocate memory\n");
                 free_index = 0;
+
                 while (free_index < count)
                 {
                     free(content[free_index]);
+
                     free_index++;
                 }
+
                 free(content);
-                free(tmp);
+                free(line);
+
                 return -1;
             }
 
@@ -93,15 +112,30 @@ int read_file(const char *file_path)
         }
 
         mbstows_result = mbstowcs(NULL, line, 0) + 1;
-        w_line = (wchar_t *)malloc(sizeof(wchar_t) * mbstows_result);
+        w_line = malloc(sizeof(wchar_t) * mbstows_result);
+
         if (w_line == NULL)
         {
             fprintf(stderr, "Failed to allocate memory\n");
             free(w_line);
+
+            free_index = 0;
+
+            while (free_index < count)
+            {
+                free(content[free_index]);
+
+                free_index++;
+            }
+
+            free(content);
+            free(line);
+
             return -1;
         }
 
         mbstowcs(w_line, line, mbstows_result);
+
         content[count] = w_line;
         count++;
     }
@@ -112,10 +146,31 @@ int read_file(const char *file_path)
     {
         fprintf(stderr, "Error closing file %s: %s\n", file_path, strerror(errno));
 
+        free_index = 0;
+
+        while (free_index < count)
+        {
+            free(content[free_index]);
+            
+            free_index++;
+        }
+
+        free(content);
         return -1;
     }
 
     render_screen(content, count);
+
+    free_index = 0;
+
+    while (free_index < count)
+    {
+        free(content[free_index]);
+
+        free_index++;
+    }
+
+    free(content);
 
     return 0;
 }
@@ -125,11 +180,13 @@ DIR *get_directory_pointer(const char *directory_path)
     // 指定された一番上のディレクトリのポインタを返す関数
 
     DIR *dir; // DIR型ポインタ
+              //
     dir = opendir(directory_path);
 
     if (dir == NULL)
     {
         fprintf(stderr, "Error opening directory %s: %s\n", directory_path, strerror(errno));
+
         return NULL;
     }
 
